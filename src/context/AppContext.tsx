@@ -116,30 +116,56 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (role === 'admin') {
       const admin = users.find((u) => u.role === 'admin') || mockUsers[0];
       setCurrentUser(admin);
+      localStorage.setItem('rri_editools_user', JSON.stringify(admin));
       showToast(`Beralih ke akun Administrator: ${admin.name}`, 'info', 'Role Switcher');
     } else {
       const editor = users.find((u) => u.role === 'editor') || mockUsers[1];
       setCurrentUser(editor);
+      localStorage.setItem('rri_editools_user', JSON.stringify(editor));
+      // Pastikan editor langsung diarahkan keluar jika sedang di halaman admin
+      const adminPages = ['buku-gaya', 'manajemen-pengguna', 'konfigurasi-provider', 'audit-log'];
+      if (adminPages.includes(currentPage)) {
+        setCurrentPage('daftar-draf');
+        localStorage.setItem('rri_editools_page', 'daftar-draf');
+      }
       showToast(`Beralih ke akun Editor: ${editor.name}`, 'info', 'Role Switcher');
     }
   };
 
   const login = (identifier: string) => {
     const clean = identifier.trim().toLowerCase();
-    const matched = users.find(
-      (u) =>
-        u.email.toLowerCase() === clean ||
-        (u.nip && u.nip.toLowerCase() === clean) ||
-        (clean.includes('admin') && u.role === 'admin') ||
-        (clean.includes('editor') && u.role === 'editor') ||
-        (clean.includes('user1') && u.role === 'editor')
-    );
-    if (matched) {
-      setCurrentUser(matched);
-    } else if (clean.includes('admin')) {
-      setCurrentUser(mockUsers[0]);
+    
+    // Cek apakah login sebagai administrator
+    const isAdmin =
+      clean.includes('admin') ||
+      clean.includes('cameron') ||
+      clean === '198804122015031001';
+
+    let userToSet: User;
+    if (isAdmin) {
+      userToSet = users.find((u) => u.role === 'admin') || mockUsers[0];
     } else {
-      setCurrentUser(mockUsers[1]);
+      // Cari editor yang cocok, fallback ke Siti Rahmawati (Editor)
+      userToSet =
+        users.find(
+          (u) =>
+            u.role === 'editor' &&
+            (u.email.toLowerCase() === clean ||
+              (u.nip && u.nip.toLowerCase() === clean) ||
+              clean.includes('editor') ||
+              clean.includes('user1') ||
+              clean.includes('siti'))
+        ) ||
+        users.find((u) => u.role === 'editor') ||
+        mockUsers[1];
+    }
+
+    setCurrentUser(userToSet);
+    localStorage.setItem('rri_editools_user', JSON.stringify(userToSet));
+
+    if (userToSet.role === 'editor') {
+      setCurrentPage('daftar-draf');
+      localStorage.setItem('rri_editools_page', 'daftar-draf');
     }
     setTwoFactorPending(true);
   };
@@ -148,8 +174,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (otp.length === 6) {
       setIsAuthenticated(true);
       setTwoFactorPending(false);
-      setCurrentPage('daftar-draf');
-      showToast('Login berhasil. Selamat datang di Editools RRI', 'success', 'Modul Autentikasi');
+      localStorage.setItem('rri_editools_auth', 'true');
+
+      // Proteksi rute saat login sebagai editor
+      const adminPages = ['buku-gaya', 'manajemen-pengguna', 'konfigurasi-provider', 'audit-log'];
+      if (currentUser.role === 'editor' && adminPages.includes(currentPage)) {
+        setCurrentPage('daftar-draf');
+        localStorage.setItem('rri_editools_page', 'daftar-draf');
+      }
+
+      showToast(
+        `Login berhasil sebagai ${currentUser.role === 'admin' ? 'Administrator' : 'Editor'}: ${currentUser.name}`,
+        'success',
+        'Modul Autentikasi'
+      );
       return true;
     }
     return false;
@@ -158,6 +196,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const logout = () => {
     setIsAuthenticated(false);
     setTwoFactorPending(false);
+    localStorage.removeItem('rri_editools_auth');
+    localStorage.removeItem('rri_editools_user');
+    localStorage.removeItem('rri_editools_page');
+    // Reset default user ke editor agar tidak ada sisa hak akses admin
+    const defaultEditor = users.find((u) => u.role === 'editor') || mockUsers[1];
+    setCurrentUser(defaultEditor);
     setCurrentPage('daftar-draf');
     showToast('Anda telah berhasil keluar dari sistem.', 'info');
   };

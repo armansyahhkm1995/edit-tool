@@ -119,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
         </div>
 
         {/* Admin Menu (Only shown when user is Admin) */}
-        {currentUser.role === 'admin' && (
+        {currentUser && currentUser.role?.toLowerCase() === 'admin' && (
           <div className="space-y-1">
             <p className="px-2.5 py-1 text-[11px] font-bold text-slate-400 tracking-wider uppercase">
               ADMIN

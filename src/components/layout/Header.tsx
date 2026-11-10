@@ -112,12 +112,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
             title="Klik untuk beralih profil (Admin/Editor)"
           >
             <span className="text-xs font-semibold text-slate-900 truncate max-w-[110px] sm:max-w-none">
-              {currentUser.role === 'editor'
-                ? (currentUser.name && currentUser.name !== 'Cameron Newton' ? currentUser.name : 'Siti Rahmawati')
-                : 'Cameron Newton'}
+              {currentUser.role?.toLowerCase() === 'admin' ? 'Cameron Newton' : (currentUser.name || 'Siti Rahmawati')}
             </span>
             <span className="text-[11px] text-slate-400 font-normal">
-              {currentUser.role === 'editor' ? 'Editor' : 'Admin'}
+              {currentUser.role?.toLowerCase() === 'admin' ? 'Admin' : 'Editor'}
             </span>
           </button>
 

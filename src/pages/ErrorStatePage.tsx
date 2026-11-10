@@ -23,12 +23,11 @@ export const ErrorStatePage: React.FC<ErrorStatePageProps> = ({ code }) => {
         return {
           icon: <ShieldAlert className="w-12 h-12 text-red-600" />,
           title: 'Akses Ditolak',
-          description: 'Halaman ini memerlukan hak akses Administrator.',
-          actionLabel: 'Masuk Sebagai Admin',
+          description: 'Halaman ini khusus untuk Administrator. Anda saat ini masuk sebagai Editor.',
+          actionLabel: 'Kembali ke Daftar Draf',
           actionIcon: <ArrowLeft className="w-4 h-4" />,
           onClick: () => {
-            switchRole('admin');
-            setCurrentPage('buku-gaya');
+            setCurrentPage('daftar-draf');
           },
         };
       case 404:
