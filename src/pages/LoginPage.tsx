@@ -10,18 +10,18 @@ export const LoginPage: React.FC = () => {
 
   // Login form state
   const [identifier, setIdentifier] = useState('user1@rri.co.id');
-  const [password, setPassword] = useState('password123');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isCaptchaVerified, setIsCaptchaVerified] = useState(true);
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
   const [isVerifyingCaptcha, setIsVerifyingCaptcha] = useState(false);
 
-  // 2FA state (pre-filled with valid 6-digit mock OTP)
-  const [otp, setOtp] = useState(['1', '2', '3', '4', '5', '6']);
+  // 2FA state
+  const [otp, setOtp] = useState(['1', '2', '3', '4', '', '']);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (twoFactorPending && inputRefs.current[5]) {
-      inputRefs.current[5]?.focus();
+    if (twoFactorPending && inputRefs.current[4]) {
+      inputRefs.current[4]?.focus();
     }
   }, [twoFactorPending]);
 
@@ -109,55 +109,6 @@ export const LoginPage: React.FC = () => {
                 <p className="text-sm text-slate-500 mt-1">
                   Silakan masuk menggunakan NIP atau Email Anda.
                 </p>
-              </div>
-
-              {/* Quick Account Switcher (For Testing & Demo) */}
-              <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-xl mb-5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-blue-900 tracking-wide uppercase">
-                    Pilihan Akun Cepat (Simulasi Demo)
-                  </span>
-                  <span className="text-[10px] text-blue-600 font-medium">Klik untuk ganti</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIdentifier('user1@rri.co.id');
-                      setPassword('editor123');
-                      setIsCaptchaVerified(true);
-                    }}
-                    className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
-                      identifier.includes('user1') || identifier.includes('editor')
-                        ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-                        : 'bg-white border-slate-200 text-slate-700 hover:border-blue-300'
-                    }`}
-                  >
-                    <p className="text-xs font-semibold leading-tight">Editor</p>
-                    <p className={`text-[10px] truncate ${identifier.includes('user1') || identifier.includes('editor') ? 'text-blue-100' : 'text-slate-400'}`}>
-                      user1@rri.co.id
-                    </p>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIdentifier('cameron.newton@rri.co.id');
-                      setPassword('admin123');
-                      setIsCaptchaVerified(true);
-                    }}
-                    className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
-                      identifier.includes('cameron') || identifier.includes('admin')
-                        ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-                        : 'bg-white border-slate-200 text-slate-700 hover:border-blue-300'
-                    }`}
-                  >
-                    <p className="text-xs font-semibold leading-tight">Admin</p>
-                    <p className={`text-[10px] truncate ${identifier.includes('cameron') || identifier.includes('admin') ? 'text-blue-100' : 'text-slate-400'}`}>
-                      cameron.newton@rri.co.id
-                    </p>
-                  </button>
-                </div>
               </div>
 
               <form onSubmit={handleLoginSubmit} className="space-y-4">
@@ -254,14 +205,6 @@ export const LoginPage: React.FC = () => {
                   Kami mengirimkan 6-digit kode OTP ke email{' '}
                   <span className="font-semibold text-slate-800">{identifier}</span>.
                 </p>
-                <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                  <span className="text-slate-500">Akan Masuk Sebagai:</span>
-                  <span className="font-bold">
-                    {identifier.toLowerCase().includes('admin') || identifier.toLowerCase().includes('cameron')
-                      ? 'Administrator (Cameron Newton)'
-                      : 'Editor (Siti Rahmawati)'}
-                  </span>
-                </div>
               </div>
 
               <form onSubmit={handleVerify2FASubmit} className="space-y-6">
