@@ -124,11 +124,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
-  const login = (email: string) => {
-    // If admin or editor matches
-    const matched = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  const login = (identifier: string) => {
+    const clean = identifier.trim().toLowerCase();
+    const matched = users.find(
+      (u) =>
+        u.email.toLowerCase() === clean ||
+        (u.nip && u.nip.toLowerCase() === clean) ||
+        (clean.includes('admin') && u.role === 'admin') ||
+        (clean.includes('editor') && u.role === 'editor') ||
+        (clean.includes('user1') && u.role === 'editor')
+    );
     if (matched) {
       setCurrentUser(matched);
+    } else if (clean.includes('admin')) {
+      setCurrentUser(mockUsers[0]);
+    } else {
+      setCurrentUser(mockUsers[1]);
     }
     setTwoFactorPending(true);
   };
