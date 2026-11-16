@@ -3,15 +3,11 @@ import { useApp } from '../context/AppContext';
 import { User } from '../types';
 import {
   Users,
-  ShieldCheck,
   UserCheck,
   Plus,
   Search,
   Pencil,
-  X,
-  Check,
-  CheckCircle2,
-  AlertTriangle,
+  Trash2,
 } from 'lucide-react';
 import { AddEditUserModal } from '../components/modals/AddEditUserModal';
 import { DeactivateUserModal } from '../components/modals/DeactivateUserModal';
@@ -53,8 +49,6 @@ export const ManajemenPenggunaPage: React.FC = () => {
   const totalCount = users.length;
   const adminCount = users.filter((u) => u.role === 'admin').length;
   const editorCount = users.filter((u) => u.role === 'editor').length;
-  const twoFaActiveCount = users.filter((u) => u.twoFactorEnabled).length;
-  const twoFaPercent = Math.round((twoFaActiveCount / totalCount) * 100);
   const activeCount = users.filter((u) => u.status === 'active').length;
   const inactiveCount = totalCount - activeCount;
 
@@ -67,8 +61,7 @@ export const ManajemenPenggunaPage: React.FC = () => {
             Manajemen Pengguna & Kontrol Hak Akses
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
-            Pengaturan hak akses pengguna, pemantauan status akun aktif, dan audit kepatuhan keamanan
-            2FA.
+            Pengaturan hak akses pengguna dan pemantauan status akun aktif.
           </p>
         </div>
 
@@ -84,8 +77,8 @@ export const ManajemenPenggunaPage: React.FC = () => {
         </button>
       </div>
 
-      {/* 3 KPI Cards (Matching Figma Node 954:19547) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* KPI Cards (2 Cards) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Card 1 */}
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
@@ -103,24 +96,6 @@ export const ManajemenPenggunaPage: React.FC = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-              Kepatuhan 2FA
-            </p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">
-              {twoFaActiveCount} Aktif ({twoFaPercent}%)
-            </p>
-            <p className="text-xs text-slate-500 mt-0.5">
-              {totalCount - twoFaActiveCount} Akun belum aktivasi 2FA
-            </p>
-          </div>
-        </div>
-
-        {/* Card 3 */}
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
             <UserCheck className="w-6 h-6" />
@@ -198,7 +173,6 @@ export const ManajemenPenggunaPage: React.FC = () => {
               <tr>
                 <th className="py-3 px-4 sm:px-6 font-semibold">Nama & Email</th>
                 <th className="py-3 px-4 font-semibold">Peran Akses</th>
-                <th className="py-3 px-4 font-semibold">Verifikasi 2FA</th>
                 <th className="py-3 px-4 font-semibold">Status Akun</th>
                 <th className="py-3 px-4 text-center font-semibold">Aksi</th>
               </tr>
@@ -240,35 +214,37 @@ export const ManajemenPenggunaPage: React.FC = () => {
                         </span>
                       </td>
 
-                      {/* Verifikasi 2FA */}
+                      {/* Status Akun (Toggle) */}
                       <td className="py-4 px-4 whitespace-nowrap">
-                        {user.twoFactorEnabled ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>2FA Terverifikasi</span>
+                        <div className="flex items-center gap-2.5">
+                          <button
+                            type="button"
+                            onClick={() => toggleUserStatus(user.id)}
+                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
+                              user.status === 'active' ? 'bg-[#1866EF]' : 'bg-slate-200'
+                            }`}
+                            role="switch"
+                            aria-checked={user.status === 'active'}
+                            title={user.status === 'active' ? 'Nonaktifkan Akun' : 'Aktifkan Akun'}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                                user.status === 'active' ? 'translate-x-5' : 'translate-x-0'
+                              }`}
+                            />
+                          </button>
+                          <span
+                            className={`text-xs font-medium ${
+                              user.status === 'active' ? 'text-emerald-600' : 'text-slate-400'
+                            }`}
+                          >
+                            {user.status === 'active' ? 'Aktif' : 'Nonaktif'}
                           </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                            <span>Belum diaktifkan</span>
-                          </span>
-                        )}
+                        </div>
                       </td>
 
-                      {/* Status Akun */}
-                      <td className="py-4 px-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                            user.status === 'active'
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-slate-100 text-slate-500 border border-slate-200'
-                          }`}
-                        >
-                          {user.status === 'active' ? 'Aktif' : 'Non-aktif'}
-                        </span>
-                      </td>
-
-                      {/* Aksi (Pencil & X / Check buttons) */}
+                      {/* Aksi (Pencil & Trash2 buttons) */}
                       <td className="py-4 px-4 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-1.5">
                           <button
@@ -282,23 +258,13 @@ export const ManajemenPenggunaPage: React.FC = () => {
                             <Pencil className="w-4 h-4" />
                           </button>
 
-                          {user.status === 'active' ? (
-                            <button
-                              onClick={() => setDeactivatingUser(user)}
-                              className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
-                              title="Nonaktifkan Akun"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => setDeactivatingUser(user)}
-                              className="p-1.5 rounded-lg border border-emerald-200 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
-                              title="Aktifkan Akun"
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => setDeactivatingUser(user)}
+                            className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
+                            title="Hapus / Nonaktifkan Pengguna"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -306,7 +272,7 @@ export const ManajemenPenggunaPage: React.FC = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                  <td colSpan={4} className="py-12 text-center text-slate-500">
                     <p className="font-semibold text-slate-700">Pengguna tidak ditemukan</p>
                     <p className="text-xs mt-1">Coba sesuaikan kata kunci atau filter pencarian</p>
                   </td>

@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   ExternalLink,
   ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 export const RiwayatPemeriksaanPage: React.FC = () => {
@@ -17,6 +18,21 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
   const [selectedHistory, setSelectedHistory] = useState<CheckHistoryItem | null>(null);
   const [activeVersion, setActiveVersion] = useState<'v2' | 'v1'>('v2');
   const [activeTab, setActiveTab] = useState<FindingCategory>('kemiripan');
+
+  // Accordion state: Set of finding IDs that are expanded (default EMPTY = ALL CLOSED)
+  const [expandedFindingIds, setExpandedFindingIds] = useState<Set<string>>(new Set());
+
+  const toggleAccordion = (id: string) => {
+    setExpandedFindingIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
 
   // Filters for main table
   const [searchTerm, setSearchTerm] = useState('');
@@ -367,103 +383,99 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Scrollable Container with Read-Only Final Decision Cards */}
-                <div className="flex-1 overflow-y-auto space-y-3.5 pr-1 min-h-0">
-                  {/* Card 1: Telah Diperbaiki */}
-                  <div className="rounded-xl border border-slate-200 shadow-2xs">
-                    <div className="bg-[#E2E8F0] px-4 py-2 rounded-t-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold text-slate-900 block">
-                          Tingkat: Tinggi
-                        </span>
-                        <span className="text-[11px] text-slate-500">Temuan #KMP-01</span>
-                      </div>
-                      <span className="bg-[#334155] text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
-                        Telah Diperbaiki
-                      </span>
-                    </div>
+                {/* Scrollable Container with Accordion Finding Cards */}
+                <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
+                  {activeDraft.findings
+                    .filter((f) => f.category === 'kemiripan')
+                    .map((finding) => {
+                      const isExpanded = expandedFindingIds.has(finding.id);
+                      return (
+                        <div
+                          key={finding.id}
+                          className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden transition-all"
+                        >
+                          {/* Accordion Header (Default Collapsed) */}
+                          <div
+                            onClick={() => toggleAccordion(finding.id)}
+                            className="bg-slate-100/80 px-4 py-3 flex items-center justify-between cursor-pointer select-none transition-colors hover:bg-slate-200/70 border-b border-slate-200"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="p-0.5 rounded text-slate-700">
+                                {isExpanded ? (
+                                  <ChevronUp className="w-4 h-4 text-slate-800" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4 text-slate-800" />
+                                )}
+                              </span>
+                              <span className="text-xs font-bold text-slate-900">
+                                Tingkat: {finding.severity}
+                              </span>
+                              <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
+                                {finding.code}
+                              </span>
+                            </div>
 
-                    <div className="bg-slate-50 p-4 rounded-b-xl space-y-3">
-                      <div className="bg-white border border-slate-200 p-3 rounded-md flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-900">Deteksi AI</span>
-                        <span className="text-xs text-slate-700">Indikasi AI: 12% (Aman)</span>
-                      </div>
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
+                                  finding.status === 'Telah Diperbaiki' || finding.status === 'Diterima'
+                                    ? 'bg-[#334155] text-white'
+                                    : 'bg-white border border-slate-300 text-slate-700'
+                                }`}
+                              >
+                                {finding.status}
+                              </span>
 
-                      <div className="bg-white border border-slate-200 p-3 rounded-md">
-                        <p className="text-xs font-bold text-slate-900 mb-1 uppercase tracking-wide">
-                          KUTIPAN TEKS COCOK (42 KATA SAMA PERSIS):
-                        </p>
-                        <p className="text-xs text-slate-700 leading-relaxed font-sans">
-                          "...roket pendorong generasi terbaru yang dirancang khusus guna menempatkan
-                          muatan telekomunikasi pita lebar di orbit geostasioner..."
-                        </p>
-                      </div>
+                              <a
+                                href="https://antaranews.com"
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="bg-white border border-slate-200 text-slate-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-100 transition-colors shrink-0"
+                                title="Lihat Sumber"
+                              >
+                                <span>Lihat Sumber</span>
+                                <ExternalLink className="w-3 h-3 text-slate-500" />
+                              </a>
+                            </div>
+                          </div>
 
-                      <div className="bg-white border border-slate-200 p-3 rounded-md shadow-2xs">
-                        <p className="text-xs font-bold text-slate-900 mb-1">
-                          Alasan & Rekomendasi AI:
-                        </p>
-                        <p className="text-xs text-slate-700 leading-relaxed">
-                          Kutipan ini identik dengan siaran rilis Antara News. Jika ini kutipan resmi,
-                          sertakan atribusi narasumber atau parafrase kalimat agar terhindar dari
-                          penalti SEO sindikasi berita.
-                        </p>
-                      </div>
+                          {/* Accordion Body */}
+                          {isExpanded && (
+                            <div className="bg-slate-50 p-4 space-y-3 animate-fade-in border-t border-slate-200">
+                              <div className="bg-white border border-slate-200 p-3 rounded-md flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-900">Deteksi AI</span>
+                                <span className="text-xs text-slate-700">
+                                  {finding.aiIndication || 'Indikasi AI: 12% (Aman)'}
+                                </span>
+                              </div>
 
-                      {/* Final Editor Decision Banner (Blue) */}
-                      <div className="bg-[#1866EF] text-white p-3 rounded-lg text-xs font-semibold leading-relaxed">
-                        Keputusan Akhir Editor: Telah Diperbaiki oleh Agus Setiawan (Editor)
-                      </div>
-                    </div>
-                  </div>
+                              <div className="bg-white border border-slate-200 p-3 rounded-md">
+                                <p className="text-xs font-bold text-slate-900 mb-1 uppercase tracking-wide">
+                                  KUTIPAN TEKS COCOK:
+                                </p>
+                                <p className="text-xs text-slate-700 leading-relaxed font-sans">
+                                  "{finding.matchedSnippet}"
+                                </p>
+                              </div>
 
-                  {/* Card 2: Diterima */}
-                  <div className="rounded-xl border border-slate-200 shadow-2xs">
-                    <div className="bg-[#E2E8F0] px-4 py-2 rounded-t-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold text-slate-900 block">
-                          Tingkat: Tinggi
-                        </span>
-                        <span className="text-[11px] text-slate-500">Temuan #KMP-01</span>
-                      </div>
-                      <span className="bg-[#334155] text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
-                        Diterima
-                      </span>
-                    </div>
+                              <div className="bg-white border border-slate-200 p-3 rounded-md shadow-2xs">
+                                <p className="text-xs font-bold text-slate-900 mb-1">
+                                  Alasan & Rekomendasi AI:
+                                </p>
+                                <p className="text-xs text-slate-700 leading-relaxed">
+                                  {finding.recommendation}
+                                </p>
+                              </div>
 
-                    <div className="bg-slate-50 p-4 rounded-b-xl space-y-3">
-                      <div className="bg-white border border-slate-200 p-3 rounded-md flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-900">Deteksi AI</span>
-                        <span className="text-xs text-slate-700">Indikasi AI: 12% (Aman)</span>
-                      </div>
-
-                      <div className="bg-white border border-slate-200 p-3 rounded-md">
-                        <p className="text-xs font-bold text-slate-900 mb-1 uppercase tracking-wide">
-                          KUTIPAN TEKS COCOK (42 KATA SAMA PERSIS):
-                        </p>
-                        <p className="text-xs text-slate-700 leading-relaxed font-sans">
-                          "...roket pendorong generasi terbaru yang dirancang khusus guna menempatkan
-                          muatan telekomunikasi pita lebar di orbit geostasioner..."
-                        </p>
-                      </div>
-
-                      <div className="bg-white border border-slate-200 p-3 rounded-md shadow-2xs">
-                        <p className="text-xs font-bold text-slate-900 mb-1">
-                          Alasan & Rekomendasi AI:
-                        </p>
-                        <p className="text-xs text-slate-700 leading-relaxed">
-                          Kutipan ini identik dengan siaran rilis Antara News. Jika ini kutipan resmi,
-                          sertakan atribusi narasumber atau parafrase kalimat agar terhindar dari
-                          penalti SEO sindikasi berita.
-                        </p>
-                      </div>
-
-                      {/* Final Editor Decision Banner (Green) */}
-                      <div className="bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] p-3 rounded-lg text-xs font-semibold leading-relaxed">
-                        Keputusan Akhir Editor: Diterima oleh Agus Setiawan (Editor)
-                      </div>
-                    </div>
-                  </div>
+                              <div className="bg-[#1866EF] text-white p-3 rounded-lg text-xs font-semibold leading-relaxed">
+                                Keputusan Akhir Editor: {finding.status} oleh Agus Setiawan (Editor)
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             )}
@@ -478,40 +490,92 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="flex-1 overflow-y-auto space-y-3.5 pr-1 min-h-0">
-                  <div className="rounded-xl border border-slate-200 shadow-2xs">
-                    <div className="bg-[#E2E8F0] px-4 py-2 rounded-t-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold text-slate-900 block">Tingkat: Sedang</span>
-                        <span className="text-[11px] text-slate-500">Temuan #BGY-01</span>
-                      </div>
-                      <span className="bg-[#334155] text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
-                        Telah Diperbaiki
-                      </span>
-                    </div>
+                <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
+                  {activeDraft.findings
+                    .filter((f) => f.category === 'buku_gaya')
+                    .map((finding) => {
+                      const isExpanded = expandedFindingIds.has(finding.id);
+                      return (
+                        <div
+                          key={finding.id}
+                          className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden transition-all"
+                        >
+                          {/* Accordion Header */}
+                          <div
+                            onClick={() => toggleAccordion(finding.id)}
+                            className="bg-amber-50/80 px-4 py-3 flex items-center justify-between cursor-pointer select-none transition-colors hover:bg-amber-100/70 border-b border-amber-200/60"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="p-0.5 rounded text-slate-700">
+                                {isExpanded ? (
+                                  <ChevronUp className="w-4 h-4 text-amber-900" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4 text-amber-900" />
+                                )}
+                              </span>
+                              <span className="text-xs font-bold text-amber-950">
+                                Tingkat: {finding.severity}
+                              </span>
+                              <span className="text-[11px] text-amber-800 font-mono hidden sm:inline">
+                                {finding.code}
+                              </span>
+                            </div>
 
-                    <div className="bg-slate-50 p-4 rounded-b-xl space-y-3">
-                      <div className="bg-white border border-slate-200 p-3 rounded-md">
-                        <p className="text-xs font-bold text-slate-900 mb-1">KUTIPAN TEKS DRAF:</p>
-                        <p className="text-xs text-slate-700">
-                          "...menurut kepala badan riset saat meninjau langsung kesiapan..."
-                        </p>
-                      </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-amber-200 text-amber-800">
+                                {finding.status}
+                              </span>
 
-                      <div className="bg-white border border-slate-200 p-3 rounded-md">
-                        <p className="text-xs font-bold text-slate-900 mb-1">
-                          Alasan & Rekomendasi AI:
-                        </p>
-                        <p className="text-xs text-slate-700">
-                          Ganti dengan nama resmi "Badan Riset dan Inovasi Nasional (BRIN)".
-                        </p>
-                      </div>
+                              <a
+                                href="https://rri.co.id/bukugaya"
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="bg-white border border-slate-200 text-slate-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-100 transition-colors shrink-0"
+                                title="Lihat Sumber"
+                              >
+                                <span>Lihat Sumber</span>
+                                <ExternalLink className="w-3 h-3 text-slate-500" />
+                              </a>
+                            </div>
+                          </div>
 
-                      <div className="bg-[#1866EF] text-white p-3 rounded-lg text-xs font-semibold">
-                        Keputusan Akhir Editor: Telah Diperbaiki oleh Agus Setiawan (Editor)
-                      </div>
-                    </div>
-                  </div>
+                          {/* Accordion Body */}
+                          {isExpanded && (
+                            <div className="bg-slate-50 p-4 space-y-3 animate-fade-in border-t border-slate-200">
+                              <div className="bg-white border border-slate-200 p-3 rounded-md">
+                                <p className="text-xs font-bold text-slate-900 mb-1">KUTIPAN TEKS DRAF:</p>
+                                <p className="text-xs text-slate-700">
+                                  "{finding.matchedSnippet}"
+                                </p>
+                              </div>
+
+                              <div className="bg-white border border-slate-200 p-3 rounded-md">
+                                <p className="text-xs font-bold text-slate-900 mb-1">
+                                  Aturan Buku Gaya:
+                                </p>
+                                <p className="text-xs font-semibold text-red-600">
+                                  {finding.ruleViolated}
+                                </p>
+                              </div>
+
+                              <div className="bg-white border border-slate-200 p-3 rounded-md shadow-2xs">
+                                <p className="text-xs font-bold text-slate-900 mb-1">
+                                  Alasan & Rekomendasi AI:
+                                </p>
+                                <p className="text-xs text-slate-700 leading-relaxed">
+                                  {finding.recommendation}
+                                </p>
+                              </div>
+
+                              <div className="bg-[#1866EF] text-white p-3 rounded-lg text-xs font-semibold">
+                                Keputusan Akhir Editor: Telah Diperbaiki oleh Agus Setiawan (Editor)
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             )}
@@ -520,37 +584,100 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
             {activeTab === 'seo' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
                 <div className="shrink-0 p-4 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-900">Optimasi AI-Search:</span>
+                  <span className="text-xs font-semibold text-slate-900">Optimasi AI-Search & SEO:</span>
                   <span className="bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] text-xs font-medium px-2.5 py-0.5 rounded-md">
                     Optimal
                   </span>
                 </div>
 
-                <div className="flex-1 overflow-y-auto space-y-3.5 pr-1 min-h-0">
-                  <div className="rounded-xl border border-slate-200 shadow-2xs">
-                    <div className="bg-[#E2E8F0] px-4 py-2 rounded-t-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold text-slate-900 block">Tingkat: Rendah</span>
-                        <span className="text-[11px] text-slate-500">Temuan #SEO-01</span>
-                      </div>
-                      <span className="bg-[#334155] text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
-                        Diterima
-                      </span>
-                    </div>
+                <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
+                  {activeDraft.findings
+                    .filter((f) => f.category === 'seo')
+                    .map((finding) => {
+                      const isExpanded = expandedFindingIds.has(finding.id);
+                      const isAiSearch = finding.code.startsWith('Temuan #AIS');
+                      return (
+                        <div
+                          key={finding.id}
+                          className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden transition-all"
+                        >
+                          {/* Accordion Header */}
+                          <div
+                            onClick={() => toggleAccordion(finding.id)}
+                            className={`px-4 py-3 flex items-center justify-between cursor-pointer select-none transition-colors border-b ${
+                              isAiSearch
+                                ? 'bg-purple-50/80 hover:bg-purple-100/70 border-purple-200/60'
+                                : 'bg-blue-50/80 hover:bg-blue-100/70 border-blue-200/60'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="p-0.5 rounded text-slate-700">
+                                {isExpanded ? (
+                                  <ChevronUp className="w-4 h-4 text-slate-900" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4 text-slate-900" />
+                                )}
+                              </span>
+                              <span
+                                className={`text-xs font-bold ${
+                                  isAiSearch ? 'text-purple-950' : 'text-blue-950'
+                                }`}
+                              >
+                                Tingkat: {finding.severity}
+                              </span>
+                              <span className="text-xs font-semibold text-slate-900 truncate max-w-[170px] sm:max-w-[210px]">
+                                {finding.title}
+                              </span>
+                            </div>
 
-                    <div className="bg-slate-50 p-4 rounded-b-xl space-y-3">
-                      <div className="bg-white border border-slate-200 p-3 rounded-md">
-                        <p className="text-xs font-bold text-slate-900 mb-1">USULAN OPTIMASI:</p>
-                        <p className="text-xs text-slate-700">
-                          Satelit Nusantara 3 Sukses Meluncur dari Biak Papua
-                        </p>
-                      </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700">
+                                {finding.status}
+                              </span>
 
-                      <div className="bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] p-3 rounded-lg text-xs font-semibold">
-                        Keputusan Akhir Editor: Diterima oleh Agus Setiawan (Editor)
-                      </div>
-                    </div>
-                  </div>
+                              <a
+                                href="https://developers.google.com/search/docs"
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="bg-white border border-slate-200 text-slate-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-100 transition-colors shrink-0"
+                                title="Lihat Sumber"
+                              >
+                                <span>Lihat Sumber</span>
+                                <ExternalLink className="w-3 h-3 text-slate-500" />
+                              </a>
+                            </div>
+                          </div>
+
+                          {/* Accordion Body */}
+                          {isExpanded && (
+                            <div className="bg-slate-50 p-4 space-y-3 animate-fade-in border-t border-slate-200">
+                              <div className="bg-white border border-slate-200 p-3 rounded-md">
+                                <p className="text-xs font-bold text-slate-900 mb-1">
+                                  KUTIPAN NASKAH / USULAN:
+                                </p>
+                                <p className="text-xs text-slate-700">
+                                  "{finding.matchedSnippet}"
+                                </p>
+                              </div>
+
+                              <div className="bg-white border border-slate-200 p-3 rounded-md shadow-2xs">
+                                <p className="text-xs font-bold text-slate-900 mb-1">
+                                  Rekomendasi AI:
+                                </p>
+                                <p className="text-xs text-slate-700 leading-relaxed">
+                                  {finding.recommendation}
+                                </p>
+                              </div>
+
+                              <div className="bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] p-3 rounded-lg text-xs font-semibold">
+                                Keputusan Akhir Editor: Diterima oleh Agus Setiawan (Editor)
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             )}

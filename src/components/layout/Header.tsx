@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Bell, Menu, Shield, User as UserIcon } from 'lucide-react';
+import { Menu, Shield, User as UserIcon } from 'lucide-react';
 
 interface HeaderProps {
   onOpenMobileSidebar: () => void;
@@ -40,11 +40,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
       case 'manajemen-pengguna':
         return 'Manajemen Pengguna';
       case 'konfigurasi-provider':
-        return 'Konfigurasi Layanan';
+        return 'Konfigurasi Kemiripan';
       case 'audit-log':
         return 'Audit Log & Keamanan';
-      case 'notifikasi':
-        return 'Notifikasi';
       case 'error-403':
         return 'Error 403';
       case 'error-404':
@@ -85,25 +83,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
 
       {/* Right Controls (Matching Aintelligence layout) */}
       <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
-        {/* Notification Bell Button (Outlined Box) */}
-        <button
-          onClick={() => setCurrentPage('notifikasi')}
-          className={`p-2 rounded-lg border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition-colors relative cursor-pointer ${
-            currentPage === 'notifikasi' ? 'bg-blue-50 border-blue-300 text-blue-600' : ''
-          }`}
-          title="Notifikasi"
-        >
-          <Bell className="w-4 h-4 text-slate-700" />
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-              {unreadCount}
-            </span>
-          )}
-        </button>
-
-        {/* Vertical Divider */}
-        <div className="h-7 w-px bg-slate-200" />
-
         {/* User Profile (Text only with role dropdown, matching Aintelligence) */}
         <div className="relative" ref={dropdownRef}>
           <button

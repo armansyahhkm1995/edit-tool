@@ -11,7 +11,6 @@ import { BukuGayaPage } from '../../pages/BukuGayaPage';
 import { ManajemenPenggunaPage } from '../../pages/ManajemenPenggunaPage';
 import { KonfigurasiProviderPage } from '../../pages/KonfigurasiProviderPage';
 import { AuditLogPage } from '../../pages/AuditLogPage';
-import { NotifikasiPage } from '../../pages/NotifikasiPage';
 import { ErrorStatePage } from '../../pages/ErrorStatePage';
 
 export const AppLayout: React.FC = () => {
@@ -61,10 +60,6 @@ export const AppLayout: React.FC = () => {
         ) : (
           <ErrorStatePage code={403} />
         );
-
-      // Utility & Feedback
-      case 'notifikasi':
-        return <NotifikasiPage />;
 
       // Error States
       case 'error-403':

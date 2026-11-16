@@ -1,22 +1,30 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { useApp } from '../context/AppContext';
+import { useToast } from '../context/ToastContext';
 import { StyleGuideVersion } from '../types';
 import {
   Upload,
   Search,
   Eye,
-  X,
-  Check,
   ChevronDown,
 } from 'lucide-react';
 import { BukuGayaTextModal } from '../components/modals/BukuGayaTextModal';
 
 export const BukuGayaPage: React.FC = () => {
   const { styleGuides, setActiveStyleGuide, uploadStyleGuide } = useApp();
+  const { showToast } = useToast();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGuideForView, setSelectedGuideForView] = useState<StyleGuideVersion | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleToggleGuide = (guide: StyleGuideVersion) => {
+    if (guide.isActive) {
+      showToast('Harus ada minimal 1 versi buku gaya yang aktif atau pilih yang lain', 'error', 'Buku Gaya Redaksi');
+      return;
+    }
+    setActiveStyleGuide(guide.id);
+  };
 
   const filteredGuides = useMemo(() => {
     return styleGuides.filter(
@@ -136,7 +144,7 @@ export const BukuGayaPage: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          onClick={() => setActiveStyleGuide(guide.id)}
+                          onClick={() => handleToggleGuide(guide)}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-hidden cursor-pointer ${
                             guide.isActive ? 'bg-[#1866EF]' : 'bg-slate-200 hover:bg-slate-300'
                           }`}
