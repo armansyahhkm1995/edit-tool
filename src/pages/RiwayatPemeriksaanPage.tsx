@@ -12,6 +12,7 @@ import {
   History,
   Copy,
   Check,
+  Bot,
 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
@@ -201,6 +202,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
   );
 
   const [activeTab, setActiveTab] = useState<FindingCategory>('kemiripan');
+  const [seoSubFilter, setSeoSubFilter] = useState<'Semua' | 'SEO' | 'AI-Search'>('Semua');
 
   // Accordion state: Set of finding IDs that are expanded (default EMPTY = ALL CLOSED)
   const [expandedFindingIds, setExpandedFindingIds] = useState<Set<string>>(new Set());
@@ -1078,16 +1080,69 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
             {/* TAB CONTENT: SEO & AI-SEARCH */}
             {activeTab === 'seo' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
-                <div className="shrink-0 p-4 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-900">Optimasi AI-Search & SEO:</span>
-                  <span className="bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] text-xs font-medium px-2.5 py-0.5 rounded-md">
-                    Optimal
+                {/* Sub-filter pills for SEO vs AI-Search */}
+                <div className="shrink-0 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setSeoSubFilter('Semua')}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                        seoSubFilter === 'Semua'
+                          ? 'bg-slate-900 text-white'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      Semua ({activeDraft.findings.filter((f) => f.category === 'seo').length})
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSeoSubFilter('SEO')}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1 ${
+                        seoSubFilter === 'SEO'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Search className="w-3 h-3" />
+                      <span>SEO ({activeDraft.findings.filter((f) => f.category === 'seo' && f.code.startsWith('Temuan #SEO')).length})</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSeoSubFilter('AI-Search')}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1 ${
+                        seoSubFilter === 'AI-Search'
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Bot className="w-3 h-3" />
+                      <span>AI-Search ({activeDraft.findings.filter((f) => f.category === 'seo' && f.code.startsWith('Temuan #AIS')).length})</span>
+                    </button>
+                  </div>
+
+                  <span className="text-[11px] text-slate-500 font-medium hidden sm:inline">
+                    {
+                      activeDraft.findings.filter((f) => {
+                        if (f.category !== 'seo') return false;
+                        if (seoSubFilter === 'SEO') return f.code.startsWith('Temuan #SEO');
+                        if (seoSubFilter === 'AI-Search') return f.code.startsWith('Temuan #AIS');
+                        return true;
+                      }).length
+                    }{' '}
+                    Usulan
                   </span>
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
                   {activeDraft.findings
-                    .filter((f) => f.category === 'seo')
+                    .filter((f) => {
+                      if (f.category !== 'seo') return false;
+                      if (seoSubFilter === 'SEO') return f.code.startsWith('Temuan #SEO');
+                      if (seoSubFilter === 'AI-Search') return f.code.startsWith('Temuan #AIS');
+                      return true;
+                    })
                     .map((finding) => {
                       const isExpanded = expandedFindingIds.has(finding.id);
                       const isAiSearch = finding.code.startsWith('Temuan #AIS');
