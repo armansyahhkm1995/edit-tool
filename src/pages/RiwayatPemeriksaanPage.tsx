@@ -325,11 +325,10 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
             <div className="border border-slate-200 rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs min-w-[920px]">
+                <table className="w-full text-left text-xs min-w-[840px]">
                   <thead>
                     <tr className="border-b border-slate-200 text-slate-600 bg-slate-50/80">
                       <th className="py-3 px-4 font-semibold">Versi Naskah Berita</th>
-                      <th className="py-3 px-4 font-semibold">Waktu Dibuat</th>
                       <th className="py-3 px-4 font-semibold">Dibuat Oleh</th>
                       <th className="py-3 px-4 font-semibold">Penilaian</th>
                       <th className="py-3 px-4 font-semibold">Statistik Naskah</th>
@@ -370,49 +369,47 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-slate-600 whitespace-nowrap">{v.createdAt}</td>
                           <td className="py-4 px-4 whitespace-nowrap">
-                            <span
-                              className={`font-semibold ${
-                                v.isAI ? 'text-[#1866EF]' : 'text-slate-800'
-                              }`}
-                            >
-                              {v.createdBy}
-                            </span>
+                            <div className="flex flex-col">
+                              <span
+                                className={`font-semibold ${
+                                  v.isAI ? 'text-[#1866EF]' : 'text-slate-900'
+                                }`}
+                              >
+                                {v.createdBy}
+                              </span>
+                              <span className="text-[11px] text-slate-500 font-normal leading-tight mt-0.5">
+                                {v.createdAt}
+                              </span>
+                            </div>
                           </td>
                           <td className="py-4 px-4">
-                            <div className="grid grid-cols-2 gap-1.5 min-w-[280px]">
-                              <div className="px-2 py-1 rounded bg-purple-50 border border-purple-200 text-purple-900 text-[10px] flex items-center justify-between">
+                            <div className="flex flex-col gap-1.5 min-w-[220px]">
+                              <div className="px-2.5 py-1 rounded bg-purple-50 border border-purple-200 text-purple-900 text-[11px] flex items-center justify-between">
                                 <span className="font-medium text-purple-700">Deteksi AI</span>
                                 <span className="font-bold">{v.aiDetection}</span>
                               </div>
-                              <div className="px-2 py-1 rounded bg-slate-100 border border-slate-300 text-slate-800 text-[10px] flex items-center justify-between">
+                              <div className="px-2.5 py-1 rounded bg-slate-100 border border-slate-300 text-slate-800 text-[11px] flex items-center justify-between">
                                 <span className="font-medium text-slate-600">Kemiripan</span>
                                 <span className="font-bold">{v.similarityScore}</span>
                               </div>
-                              <div className="px-2 py-1 rounded bg-amber-50 border border-amber-200 text-amber-900 text-[10px] flex items-center justify-between">
+                              <div className="px-2.5 py-1 rounded bg-amber-50 border border-amber-200 text-amber-900 text-[11px] flex items-center justify-between">
                                 <span className="font-medium text-amber-700">Buku Gaya</span>
                                 <span className="font-bold">{v.styleGuideScore}</span>
                               </div>
-                              <div className="px-2 py-1 rounded bg-blue-50 border border-blue-200 text-blue-900 text-[10px] flex items-center justify-between">
+                              <div className="px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-900 text-[11px] flex items-center justify-between">
                                 <span className="font-medium text-blue-700">SEO & AI-Search</span>
                                 <span className="font-bold">{v.seoAiScore}</span>
                               </div>
                             </div>
                           </td>
                           <td className="py-4 px-4 whitespace-nowrap">
-                            <div className="flex flex-col gap-1">
-                              <div className="flex items-center gap-1.5">
-                                <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-semibold">
-                                  {v.wordCount} kata
-                                </span>
-                                <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-semibold">
-                                  {v.paragraphCount} paragraf
-                                </span>
-                              </div>
-                              <span className="text-[10px] font-medium text-emerald-700 flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                                Matriks 4 Pilar Teruji
+                            <div className="flex items-center gap-1.5">
+                              <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">
+                                {v.wordCount} kata
+                              </span>
+                              <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">
+                                {v.paragraphCount} paragraf
                               </span>
                             </div>
                           </td>
