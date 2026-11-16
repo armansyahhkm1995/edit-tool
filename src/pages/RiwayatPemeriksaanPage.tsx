@@ -23,7 +23,12 @@ interface DraftVersionData {
   createdBy: string;
   isAI: boolean;
   wordCount: number;
+  paragraphCount: number;
+  // Penilaian 4 Pilar
+  aiDetection: string;
   similarityScore: string;
+  styleGuideScore: string;
+  seoAiScore: string;
   changeSummary: string;
   title: string;
   lead: string;
@@ -47,7 +52,11 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     createdBy: 'Cameron Newton (Editor)',
     isAI: false,
     wordCount: 428,
+    paragraphCount: 3,
+    aiDetection: '12% (Aman)',
     similarityScore: '18.4% (Rendah)',
+    styleGuideScore: 'Sesuai Kaidah',
+    seoAiScore: 'Optimal (9 Usulan)',
     changeSummary:
       'Parafrase kutipan sindikasi antaranews.com, koreksi nama lembaga BRIN sesuai Buku Gaya Bab 4, dan penyusunan heading H2.',
     title: 'Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit',
@@ -98,7 +107,11 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     createdBy: 'Cameron Newton (Editor)',
     isAI: false,
     wordCount: 418,
+    paragraphCount: 3,
+    aiDetection: '22% (Aman)',
     similarityScore: '24.2% (Sedang)',
+    styleGuideScore: '1 Catatan Minor',
+    seoAiScore: 'Perlu Sub-heading',
     changeSummary:
       'Perbaikan ejaan pembuka dan penambahan keterangan lokasi pusat peluncuran Biak Numfor.',
     title: 'Peluncuran Satelit Nusantara Tiga Sukses Meluncur dari Stasiun Antariksa Biak',
@@ -146,7 +159,11 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     createdBy: 'AI Assistant (Sinkronisasi CMS)',
     isAI: true,
     wordCount: 410,
+    paragraphCount: 3,
+    aiDetection: '48% (Tinggi)',
     similarityScore: '32.8% (Tinggi)',
+    styleGuideScore: '3 Pelanggaran Format',
+    seoAiScore: 'Minim Konteks AI-Search',
     changeSummary:
       'Naskah draf awal hasil sinkronisasi otomatis CMS RRI sebelum dilakukan uji kemiripan dan penyuntingan editor.',
     title: 'Peluncuran Satelit Nusantara Tiga Sukses Meluncur dari Stasiun Antariksa Biak',
@@ -197,9 +214,20 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
   // Detail view mode: 'split' | 'versions' | 'compare'
   const [detailViewMode, setDetailViewMode] = useState<'split' | 'versions' | 'compare'>('split');
+  const [activeVersionId, setActiveVersionId] = useState<string>('v2-0');
   const [selectedCompareVersion, setSelectedCompareVersion] = useState<DraftVersionData>(
     DRAFT_VERSIONS_DATA[2] // default to v1.0
   );
+
+  const handleToggleVersion = (versionId: string) => {
+    if (activeVersionId === versionId) {
+      showToast('Harus ada minimal 1 versi naskah yang aktif atau pilih versi yang lain', 'error', 'Riwayat Versi');
+      return;
+    }
+    setActiveVersionId(versionId);
+    const targetVer = DRAFT_VERSIONS_DATA.find((v) => v.id === versionId);
+    showToast(`${targetVer?.version || 'Versi naskah'} berhasil diaktifkan sebagai versi naskah utama`, 'success', 'Riwayat Versi');
+  };
 
   const [activeTab, setActiveTab] = useState<FindingCategory>('kemiripan');
   const [seoSubFilter, setSeoSubFilter] = useState<'Semua' | 'SEO' | 'AI-Search'>('Semua');
@@ -297,69 +325,117 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
             <div className="border border-slate-200 rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs min-w-[760px]">
+                <table className="w-full text-left text-xs min-w-[920px]">
                   <thead>
                     <tr className="border-b border-slate-200 text-slate-600 bg-slate-50/80">
                       <th className="py-3 px-4 font-semibold">Versi Naskah Berita</th>
                       <th className="py-3 px-4 font-semibold">Waktu Dibuat</th>
                       <th className="py-3 px-4 font-semibold">Dibuat Oleh</th>
+                      <th className="py-3 px-4 font-semibold">Penilaian</th>
                       <th className="py-3 px-4 font-semibold">Statistik Naskah</th>
                       <th className="py-3 px-4 font-semibold">Ringkasan Perubahan</th>
                       <th className="py-3 px-4 font-semibold text-center w-28">Aksi</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white">
-                    {DRAFT_VERSIONS_DATA.map((v, idx) => (
-                      <tr key={v.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="py-4 px-4 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-900 text-sm">{v.version}</span>
-                            {idx === 0 && (
-                              <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
-                                Saat Ini
+                    {DRAFT_VERSIONS_DATA.map((v) => {
+                      const isActive = v.id === activeVersionId;
+                      return (
+                        <tr key={v.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-4 px-4 whitespace-nowrap">
+                            <div className="flex items-center gap-3">
+                              {/* Status Toggle Switch: Aktifkan Versi Ini */}
+                              <button
+                                type="button"
+                                onClick={() => handleToggleVersion(v.id)}
+                                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-hidden cursor-pointer shrink-0 ${
+                                  isActive ? 'bg-[#1866EF]' : 'bg-slate-300'
+                                }`}
+                                title={isActive ? 'Versi ini sedang aktif' : 'Klik untuk aktifkan versi ini'}
+                              >
+                                <span
+                                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                                    isActive ? 'translate-x-4.5' : 'translate-x-1'
+                                  }`}
+                                />
+                              </button>
+
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-bold text-slate-900 text-sm">{v.version}</span>
+                                {isActive && (
+                                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
+                                    Aktif
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-slate-600 whitespace-nowrap">{v.createdAt}</td>
+                          <td className="py-4 px-4 whitespace-nowrap">
+                            <span
+                              className={`font-semibold ${
+                                v.isAI ? 'text-[#1866EF]' : 'text-slate-800'
+                              }`}
+                            >
+                              {v.createdBy}
+                            </span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="grid grid-cols-2 gap-1.5 min-w-[280px]">
+                              <div className="px-2 py-1 rounded bg-purple-50 border border-purple-200 text-purple-900 text-[10px] flex items-center justify-between">
+                                <span className="font-medium text-purple-700">Deteksi AI</span>
+                                <span className="font-bold">{v.aiDetection}</span>
+                              </div>
+                              <div className="px-2 py-1 rounded bg-slate-100 border border-slate-300 text-slate-800 text-[10px] flex items-center justify-between">
+                                <span className="font-medium text-slate-600">Kemiripan</span>
+                                <span className="font-bold">{v.similarityScore}</span>
+                              </div>
+                              <div className="px-2 py-1 rounded bg-amber-50 border border-amber-200 text-amber-900 text-[10px] flex items-center justify-between">
+                                <span className="font-medium text-amber-700">Buku Gaya</span>
+                                <span className="font-bold">{v.styleGuideScore}</span>
+                              </div>
+                              <div className="px-2 py-1 rounded bg-blue-50 border border-blue-200 text-blue-900 text-[10px] flex items-center justify-between">
+                                <span className="font-medium text-blue-700">SEO & AI-Search</span>
+                                <span className="font-bold">{v.seoAiScore}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 whitespace-nowrap">
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5">
+                                <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-semibold">
+                                  {v.wordCount} kata
+                                </span>
+                                <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-semibold">
+                                  {v.paragraphCount} paragraf
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-medium text-emerald-700 flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                                Matriks 4 Pilar Teruji
                               </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4 text-slate-600 whitespace-nowrap">{v.createdAt}</td>
-                        <td className="py-4 px-4 whitespace-nowrap">
-                          <span
-                            className={`font-semibold ${
-                              v.isAI ? 'text-[#1866EF]' : 'text-slate-800'
-                            }`}
-                          >
-                            {v.createdBy}
-                          </span>
-                        </td>
-                        <td className="py-4 px-4 whitespace-nowrap">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
-                              {v.wordCount} kata
-                            </span>
-                            <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-semibold">
-                              Kemiripan: {v.similarityScore}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4 text-slate-600 max-w-sm leading-relaxed">
-                          {v.changeSummary}
-                        </td>
-                        <td className="py-4 px-4 text-center whitespace-nowrap">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedCompareVersion(v);
-                              setDetailViewMode('compare');
-                            }}
-                            className="px-3 py-1.5 bg-[#EFF6FF] hover:bg-blue-100 border border-[#BFDBFE] text-[#1866EF] font-semibold text-xs rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
-                            title="Bandingkan dengan Versi Terbaru"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span>Bandingkan</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-slate-600 max-w-sm leading-relaxed">
+                            {v.changeSummary}
+                          </td>
+                          <td className="py-4 px-4 text-center whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedCompareVersion(v);
+                                setDetailViewMode('compare');
+                              }}
+                              className="px-3 py-1.5 bg-[#EFF6FF] hover:bg-blue-100 border border-[#BFDBFE] text-[#1866EF] font-semibold text-xs rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
+                              title="Bandingkan dengan Versi Utama"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>Bandingkan</span>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -371,8 +447,10 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
     // 2. DETAIL VIEW MODE: COMPARE VIEW (SIDE-BY-SIDE WITH INLINE FINDINGS)
     if (detailViewMode === 'compare') {
-      const latest = DRAFT_VERSIONS_DATA[0];
-      const compareTarget = selectedCompareVersion || DRAFT_VERSIONS_DATA[2];
+      const latest = DRAFT_VERSIONS_DATA.find((v) => v.id === activeVersionId) || DRAFT_VERSIONS_DATA[0];
+      const compareTarget =
+        selectedCompareVersion ||
+        (activeVersionId === 'v1-0' ? DRAFT_VERSIONS_DATA[0] : DRAFT_VERSIONS_DATA[2]);
 
       return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-6 animate-fade-in">
@@ -393,7 +471,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-4xl leading-relaxed">
                 Membandingkan <strong className="text-slate-900">{compareTarget.version}</strong> dengan{' '}
-                <strong className="text-slate-900">{latest.version} (Versi Saat Ini)</strong>.
+                <strong className="text-slate-900">{latest.version} (Versi Utama Aktif)</strong>.
                 Daftar temuan dan status perbaikan ditampilkan tepat pada masing-masing paragraf tanpa mempersempit ruang pandang artikel.
               </p>
             </div>
@@ -403,10 +481,26 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             {/* Column 1: Versi Pilihan (Target Compare) */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold">
-                  Artikel Siap Rilis | {compareTarget.version} | {compareTarget.wordCount} kata
-                </span>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 gap-2">
+                <div className="flex flex-col gap-1.5">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold w-fit">
+                    Artikel Siap Rilis | {compareTarget.version} | {compareTarget.wordCount} kata
+                  </span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-semibold">
+                      AI: {compareTarget.aiDetection}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-semibold">
+                      Kemiripan: {compareTarget.similarityScore}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-semibold">
+                      Buku Gaya: {compareTarget.styleGuideScore}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
+                      SEO: {compareTarget.seoAiScore}
+                    </span>
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
@@ -417,7 +511,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                     );
                     showToast(`Naskah ${compareTarget.version} berhasil disalin ke clipboard`, 'success');
                   }}
-                  className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
+                  className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 self-start"
                 >
                   <Copy className="w-3.5 h-3.5" />
                   <span>Salin Naskah</span>
@@ -489,12 +583,28 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Column 2: Versi Saat Ini (Versi 2.0) */}
+            {/* Column 2: Versi Utama Aktif */}
             <div className="bg-white border-2 border-blue-200 rounded-xl p-5 sm:p-6 shadow-sm space-y-5">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1866EF] text-xs font-semibold">
-                  Artikel Siap Rilis | {latest.version} (Saat Ini) | {latest.wordCount} kata
-                </span>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 gap-2">
+                <div className="flex flex-col gap-1.5">
+                  <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1866EF] text-xs font-semibold w-fit">
+                    Artikel Siap Rilis | {latest.version} (Versi Utama) | {latest.wordCount} kata
+                  </span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-semibold">
+                      AI: {latest.aiDetection}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-semibold">
+                      Kemiripan: {latest.similarityScore}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-semibold">
+                      Buku Gaya: {latest.styleGuideScore}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
+                      SEO: {latest.seoAiScore}
+                    </span>
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
@@ -505,7 +615,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                     );
                     showToast(`Naskah ${latest.version} berhasil disalin ke clipboard`, 'success');
                   }}
-                  className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
+                  className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 self-start"
                 >
                   <Copy className="w-3.5 h-3.5" />
                   <span>Salin Naskah</span>
@@ -614,23 +724,31 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
           <div className="flex items-center gap-3 shrink-0 flex-wrap">
             {/* Versioning tertiary button on the left of Buka di CMS */}
-            <button
-              type="button"
-              onClick={() => setDetailViewMode('versions')}
-              className="h-10 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 rounded-lg transition-colors cursor-pointer shadow-2xs flex flex-col items-start justify-center text-left shrink-0"
-              title="Lihat Riwayat Versi Pemeriksaan"
-            >
-              <div className="flex items-center gap-1.5">
-                <History className="w-3.5 h-3.5 text-[#1866EF]" />
-                <span className="text-xs font-bold text-slate-900">Versi: 2.0</span>
-                <span className="px-1.5 py-0.2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[9px] font-semibold">
-                  Aktif
-                </span>
-              </div>
-              <span className="text-[10px] text-slate-400 font-normal leading-tight">
-                Disunting oleh Cameron Newton (06 Nov 2026, 14:45)
-              </span>
-            </button>
+            {(() => {
+              const currentActiveVer =
+                DRAFT_VERSIONS_DATA.find((v) => v.id === activeVersionId) || DRAFT_VERSIONS_DATA[0];
+              return (
+                <button
+                  type="button"
+                  onClick={() => setDetailViewMode('versions')}
+                  className="h-10 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 rounded-lg transition-colors cursor-pointer shadow-2xs flex flex-col items-start justify-center text-left shrink-0"
+                  title="Lihat Riwayat Versi Pemeriksaan"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <History className="w-3.5 h-3.5 text-[#1866EF]" />
+                    <span className="text-xs font-bold text-slate-900">{currentActiveVer.version}</span>
+                    <span className="px-1.5 py-0.2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[9px] font-semibold">
+                      Aktif
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-normal leading-tight">
+                    {currentActiveVer.isAI
+                      ? 'Dibuat oleh AI Assistant'
+                      : `Disunting oleh ${currentActiveVer.createdBy.split(' (')[0]} (${currentActiveVer.createdAt.split(' WIB')[0]})`}
+                  </span>
+                </button>
+              );
+            })()}
 
             <a
               href="https://rri.co.id/cms"
