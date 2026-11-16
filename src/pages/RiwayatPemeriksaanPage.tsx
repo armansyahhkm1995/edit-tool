@@ -983,13 +983,6 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
             {/* TAB CONTENT: BUKU GAYA */}
             {activeTab === 'buku_gaya' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
-                <div className="shrink-0 p-4 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-900">Kepatuhan Buku Gaya:</span>
-                  <span className="bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] text-xs font-medium px-2.5 py-0.5 rounded-md">
-                    Sesuai Kaidah
-                  </span>
-                </div>
-
                 <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
                   {activeDraft.findings
                     .filter((f) => f.category === 'buku_gaya')
