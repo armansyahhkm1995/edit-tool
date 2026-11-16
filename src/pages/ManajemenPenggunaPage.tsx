@@ -214,37 +214,45 @@ export const ManajemenPenggunaPage: React.FC = () => {
                         </span>
                       </td>
 
-                      {/* Status Akun (Toggle) */}
+                      {/* Status Akun (Toggle for Editor, Permanent Active for Admin) */}
                       <td className="py-4 px-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2.5">
-                          <button
-                            type="button"
-                            onClick={() => toggleUserStatus(user.id)}
-                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
-                              user.status === 'active' ? 'bg-[#1866EF]' : 'bg-slate-200'
-                            }`}
-                            role="switch"
-                            aria-checked={user.status === 'active'}
-                            title={user.status === 'active' ? 'Nonaktifkan Akun' : 'Aktifkan Akun'}
-                          >
-                            <span
-                              aria-hidden="true"
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
-                                user.status === 'active' ? 'translate-x-5' : 'translate-x-0'
+                        {user.role === 'admin' ? (
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              Aktif
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2.5">
+                            <button
+                              type="button"
+                              onClick={() => toggleUserStatus(user.id)}
+                              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
+                                user.status === 'active' ? 'bg-[#1866EF]' : 'bg-slate-200'
                               }`}
-                            />
-                          </button>
-                          <span
-                            className={`text-xs font-medium ${
-                              user.status === 'active' ? 'text-emerald-600' : 'text-slate-400'
-                            }`}
-                          >
-                            {user.status === 'active' ? 'Aktif' : 'Nonaktif'}
-                          </span>
-                        </div>
+                              role="switch"
+                              aria-checked={user.status === 'active'}
+                              title={user.status === 'active' ? 'Nonaktifkan Akun' : 'Aktifkan Akun'}
+                            >
+                              <span
+                                aria-hidden="true"
+                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                                  user.status === 'active' ? 'translate-x-5' : 'translate-x-0'
+                                }`}
+                              />
+                            </button>
+                            <span
+                              className={`text-xs font-medium ${
+                                user.status === 'active' ? 'text-emerald-600' : 'text-slate-400'
+                              }`}
+                            >
+                              {user.status === 'active' ? 'Aktif' : 'Nonaktif'}
+                            </span>
+                          </div>
+                        )}
                       </td>
 
-                      {/* Aksi (Pencil & Trash2 buttons) */}
+                      {/* Aksi (Pencil & Trash2 buttons - Trash2 hanya untuk Editor) */}
                       <td className="py-4 px-4 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-1.5">
                           <button
@@ -252,19 +260,21 @@ export const ManajemenPenggunaPage: React.FC = () => {
                               setEditingUser(user);
                               setIsAddEditOpen(true);
                             }}
-                            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-colors cursor-pointer"
                             title="Edit Pengguna"
                           >
                             <Pencil className="w-4 h-4" />
                           </button>
 
-                          <button
-                            onClick={() => setDeactivatingUser(user)}
-                            className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
-                            title="Hapus / Nonaktifkan Pengguna"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {user.role !== 'admin' && (
+                            <button
+                              onClick={() => setDeactivatingUser(user)}
+                              className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors cursor-pointer"
+                              title="Hapus / Nonaktifkan Pengguna"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
