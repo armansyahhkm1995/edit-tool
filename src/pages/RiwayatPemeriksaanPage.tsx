@@ -911,9 +911,6 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                               <span className="text-xs font-bold text-slate-900">
                                 Tingkat: {finding.severity}
                               </span>
-                              <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-                                {finding.code}
-                              </span>
                             </div>
 
                             <div className="flex items-center gap-2">
@@ -1017,9 +1014,6 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                               <span className="text-xs font-bold text-amber-950">
                                 Tingkat: {finding.severity}
                               </span>
-                              <span className="text-[11px] text-amber-800 font-mono hidden sm:inline">
-                                {finding.code}
-                              </span>
                             </div>
 
                             <div className="flex items-center gap-2">
@@ -1111,28 +1105,30 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                                 : 'bg-blue-50/80 hover:bg-blue-100/70 border-blue-200/60'
                             }`}
                           >
-                            <div className="flex items-center gap-2.5">
-                              <span className="p-0.5 rounded text-slate-700">
+                            <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
+                              <span className="p-0.5 rounded text-slate-700 shrink-0">
                                 {isExpanded ? (
                                   <ChevronUp className="w-4 h-4 text-slate-900" />
                                 ) : (
                                   <ChevronDown className="w-4 h-4 text-slate-900" />
                                 )}
                               </span>
-                              <span
-                                className={`text-xs font-bold ${
-                                  isAiSearch ? 'text-purple-950' : 'text-blue-950'
-                                }`}
-                              >
-                                Tingkat: {finding.severity}
-                              </span>
-                              <span className="text-xs font-semibold text-slate-900 truncate max-w-[170px] sm:max-w-[210px]">
-                                {finding.title}
-                              </span>
+                              <div className="flex flex-col min-w-0">
+                                <span
+                                  className={`text-xs font-bold leading-tight ${
+                                    isAiSearch ? 'text-purple-950' : 'text-blue-950'
+                                  }`}
+                                >
+                                  Tingkat: {finding.severity}
+                                </span>
+                                <span className="text-xs text-slate-500 font-normal leading-tight mt-0.5 truncate">
+                                  {finding.title}
+                                </span>
+                              </div>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700">
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
                                 {finding.status}
                               </span>
 
