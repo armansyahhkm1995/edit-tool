@@ -10,10 +10,10 @@ import {
   Trash2,
 } from 'lucide-react';
 import { AddEditUserModal } from '../components/modals/AddEditUserModal';
-import { DeactivateUserModal } from '../components/modals/DeactivateUserModal';
+import { DeleteUserModal } from '../components/modals/DeleteUserModal';
 
 export const ManajemenPenggunaPage: React.FC = () => {
-  const { users, currentUser, addUser, updateUser, toggleUserStatus } = useApp();
+  const { users, currentUser, addUser, updateUser, deleteUser, toggleUserStatus } = useApp();
 
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +23,7 @@ export const ManajemenPenggunaPage: React.FC = () => {
   // Modals
   const [isAddEditOpen, setIsAddEditOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [deactivatingUser, setDeactivatingUser] = useState<User | null>(null);
+  const [deletingUser, setDeletingUser] = useState<User | null>(null);
 
   // Filtered list
   const filteredUsers = useMemo(() => {
@@ -268,9 +268,9 @@ export const ManajemenPenggunaPage: React.FC = () => {
 
                           {user.role !== 'admin' && (
                             <button
-                              onClick={() => setDeactivatingUser(user)}
+                              onClick={() => setDeletingUser(user)}
                               className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors cursor-pointer"
-                              title="Hapus / Nonaktifkan Pengguna"
+                              title="Hapus Pengguna"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -343,16 +343,16 @@ export const ManajemenPenggunaPage: React.FC = () => {
         editingUser={editingUser}
       />
 
-      {/* Deactivate / Activate User Modal */}
-      <DeactivateUserModal
-        isOpen={Boolean(deactivatingUser)}
-        onClose={() => setDeactivatingUser(null)}
+      {/* Delete User Modal */}
+      <DeleteUserModal
+        isOpen={Boolean(deletingUser)}
+        onClose={() => setDeletingUser(null)}
         onConfirm={() => {
-          if (deactivatingUser) {
-            toggleUserStatus(deactivatingUser.id);
+          if (deletingUser) {
+            deleteUser(deletingUser.id);
           }
         }}
-        user={deactivatingUser}
+        user={deletingUser}
       />
     </div>
   );

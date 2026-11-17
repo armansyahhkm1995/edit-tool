@@ -53,6 +53,7 @@ interface AppContextType {
   uploadStyleGuide: (filename: string) => void;
   addUser: (name: string, email: string, role: 'admin' | 'editor') => void;
   updateUser: (id: string, name: string, email: string, role: 'admin' | 'editor') => void;
+  deleteUser: (id: string) => void;
   toggleUserStatus: (id: string) => void;
   updateAIConfig: (config: Partial<AIProviderConfig>) => void;
   pullNewDraftsFromCMS: () => void;
@@ -408,12 +409,36 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       );
       return;
     }
+    const target = users.find((u) => u.id === id);
+    const nextStatus = target?.status === 'active' ? 'inactive' : 'active';
     setUsers((prev) =>
       prev.map((u) =>
-        u.id === id ? { ...u, status: u.status === 'active' ? 'inactive' : 'active' } : u
+        u.id === id ? { ...u, status: nextStatus } : u
       )
     );
-    showToast('Status akun pengguna berhasil diperbarui', 'success', 'Modul Manajemen Pengguna');
+    if (nextStatus === 'inactive') {
+      showToast(`Pengguna ${target?.name || ''} telah dinonaktifkan`, 'warning', 'Modul Manajemen Pengguna');
+    } else {
+      showToast(`Pengguna ${target?.name || ''} berhasil diaktifkan kembali`, 'success', 'Modul Manajemen Pengguna');
+    }
+  };
+
+  const deleteUser = (id: string) => {
+    if (id === currentUser.id) {
+      showToast(
+        'Tindakan ditolak: Anda tidak dapat menghapus akun yang sedang digunakan',
+        'error',
+        'Modul Manajemen Pengguna'
+      );
+      return;
+    }
+    const target = users.find((u) => u.id === id);
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+    showToast(
+      `Pengguna ${target?.name || ''} berhasil dihapus dari sistem`,
+      'success',
+      'Modul Manajemen Pengguna'
+    );
   };
 
   const updateAIConfig = (config: Partial<AIProviderConfig>) => {
@@ -459,6 +484,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         uploadStyleGuide,
         addUser,
         updateUser,
+        deleteUser,
         toggleUserStatus,
         updateAIConfig,
         pullNewDraftsFromCMS,
