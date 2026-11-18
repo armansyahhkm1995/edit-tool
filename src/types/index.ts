@@ -10,10 +10,10 @@ export interface User {
   status: 'active' | 'inactive';
 }
 
-export type CMSStatus = 'Menunggu Review' | 'Draf' | 'Terbit';
+export type CMSStatus = 'Menunggu Review' | 'Diterima' | 'Diabaikan' | 'Telah Diperbaiki' | 'Draf' | 'Terbit';
 export type CheckStatus = 'Belum Diperiksa' | 'Aman' | 'Pelanggaran';
 export type FindingSeverity = 'Tinggi' | 'Sedang' | 'Rendah';
-export type FindingStatus = 'Belum Ditandai' | 'Diterima' | 'Diabaikan' | 'Telah Diperbaiki';
+export type FindingStatus = 'Belum Ditandai' | 'Sudah Ditandai' | 'Diterima' | 'Diabaikan' | 'Telah Diperbaiki';
 export type FindingCategory = 'kemiripan' | 'buku_gaya' | 'seo';
 
 export interface FindingItem {
@@ -73,6 +73,10 @@ export interface CheckHistoryItem {
   fixedCount: number;
   acceptedCount: number;
   ignoredCount: number;
+  editor?: string;
+  styleGuideCount?: number;
+  aiDetectionCount?: number;
+  seoAiCount?: number;
 }
 
 export interface WhitelistSource {

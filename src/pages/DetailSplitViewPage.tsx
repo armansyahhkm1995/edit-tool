@@ -158,11 +158,11 @@ export const DetailSplitViewPage: React.FC = () => {
             {activeDraft.title}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-            Wartawan: <span className="font-semibold text-slate-700">{activeDraft.journalist}</span>{' '}
+            Editor: <span className="font-semibold text-slate-700">{activeDraft.journalist}</span>{' '}
             • Waktu Ubah:{' '}
             <span className="font-semibold text-slate-700">{activeDraft.updatedAt} WIB</span> •
-            Status CMS:{' '}
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            Status Artikel:{' '}
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
               {activeDraft.cmsStatus}
             </span>
           </p>
@@ -507,7 +507,7 @@ export const DetailSplitViewPage: React.FC = () => {
                                 : 'bg-[#F8FAFC] border border-slate-300 text-slate-700'
                             }`}
                           >
-                            {finding.status}
+                            {finding.status === 'Belum Ditandai' ? 'Sudah Ditandai' : finding.status}
                           </span>
 
                           {/* Lihat Sumber Pill */}

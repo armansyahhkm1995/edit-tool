@@ -71,7 +71,6 @@ export const AuditLogPage: React.FC = () => {
                 <option value="Buku gaya">Buku gaya</option>
                 <option value="Pengecualian sumber">Pengecualian sumber</option>
                 <option value="Manajemen akun">Manajemen akun</option>
-                <option value="Persetujuan provider">Persetujuan provider</option>
               </select>
             </div>
 

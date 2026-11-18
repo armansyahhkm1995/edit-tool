@@ -83,7 +83,7 @@ export const DaftarDrafPage: React.FC = () => {
             />
           </div>
 
-          {/* Status CMS Dropdown */}
+          {/* Status Artikel Dropdown */}
           <div className="w-full sm:w-64">
             <select
               value={statusFilter}
@@ -94,12 +94,13 @@ export const DaftarDrafPage: React.FC = () => {
               className="w-full px-3.5 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
               <option value="" disabled hidden>
-                Status CMS: Semua Status
+                Status Artikel: Semua Status
               </option>
-              <option value="">Status CMS: Semua Status</option>
+              <option value="">Status Artikel: Semua Status</option>
               <option value="Menunggu Review">Menunggu Review</option>
-              <option value="Draf">Draf</option>
-              <option value="Terbit">Terbit</option>
+              <option value="Diterima">Diterima</option>
+              <option value="Diabaikan">Diabaikan</option>
+              <option value="Telah Diperbaiki">Telah Diperbaiki</option>
             </select>
           </div>
         </div>
@@ -110,7 +111,7 @@ export const DaftarDrafPage: React.FC = () => {
             <thead className="bg-slate-50/70 border-y border-slate-200 text-xs font-semibold text-slate-600">
               <tr>
                 <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draft</th>
-                <th className="py-3 px-4 font-semibold">Status CMS</th>
+                <th className="py-3 px-4 font-semibold">Status Artikel</th>
                 <th className="py-3 px-4 font-semibold">Status Pemeriksaan</th>
                 <th className="py-3 px-4 font-semibold">Waktu Ubah</th>
                 <th className="py-3 px-4 text-center font-semibold">Aksi</th>
@@ -124,19 +125,27 @@ export const DaftarDrafPage: React.FC = () => {
                     className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                     onClick={() => handleOpenDetail(draft)}
                   >
-                    {/* Judul Draft (Title single-line with ellipsis, and subtitle ONLY "Wartawan: RRI ...") */}
+                    {/* Judul Draft (Title single-line with ellipsis, and subtitle "Editor: RRI ...") */}
                     <td className="py-4 px-4 sm:px-6 max-w-md">
                       <p className="font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors text-sm">
                         {draft.title}
                       </p>
                       <p className="text-xs text-slate-400 mt-1 font-normal">
-                        Wartawan: {draft.journalist}
+                        Editor: {draft.journalist}
                       </p>
                     </td>
 
-                    {/* Status CMS (Blue badge, matching Figma) */}
+                    {/* Status Artikel (Badges for 4 statuses) */}
                     <td className="py-4 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                        draft.cmsStatus === 'Diterima'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : draft.cmsStatus === 'Diabaikan'
+                          ? 'bg-slate-100 text-slate-700 border border-slate-200'
+                          : draft.cmsStatus === 'Telah Diperbaiki'
+                          ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                          : 'bg-blue-50 text-blue-700 border border-blue-200'
+                      }`}>
                         {draft.cmsStatus}
                       </span>
                     </td>

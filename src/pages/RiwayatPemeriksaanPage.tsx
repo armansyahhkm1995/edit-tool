@@ -125,7 +125,7 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           title: 'Kemiripan 78% (antaranews.com)',
           description:
             '42 kata sama persis dengan siaran rilis Antara News tanpa parafrase atau atribusi.',
-          status: 'Belum Ditandai',
+          status: 'Sudah Ditandai',
         },
       },
       {
@@ -136,7 +136,7 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           title: 'Pelanggaran Nomenklatur Lembaga',
           description:
             'Penyebutan "kepala badan riset" tidak memenuhi Buku Gaya Pasal 4 tentang Nomenklatur Lembaga Resmi.',
-          status: 'Belum Ditandai',
+          status: 'Sudah Ditandai',
         },
       },
       {
@@ -147,7 +147,7 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           title: 'Kurang Sub-Heading Terstruktur',
           description:
             'Naskah belum memiliki H2/H3 dan penjelasan detail mengenai target bulan operasional.',
-          status: 'Belum Ditandai',
+          status: 'Sudah Ditandai',
         },
       },
     ],
@@ -177,7 +177,7 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           title: 'Kemiripan Tinggi dengan Kantor Berita Antara',
           description:
             'Kutipan mentah dari rilis resmi Antara News tersalin tanpa kutipan langsung atau tanda petik.',
-          status: 'Belum Ditandai',
+          status: 'Sudah Ditandai',
         },
       },
       {
@@ -187,7 +187,7 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           type: 'buku_gaya',
           title: 'Nomenklatur Lembaga Informal',
           description: 'Belum menyebut kepanjangan BRIN pada kemunculan pertama naskah.',
-          status: 'Belum Ditandai',
+          status: 'Sudah Ditandai',
         },
       },
       {
@@ -198,7 +198,7 @@ const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           title: 'Minim Konteks AI-Search',
           description:
             'Tidak terdapat konteks perbandingan satelit terdahulu atau estimasi waktu operasional komersial.',
-          status: 'Belum Ditandai',
+          status: 'Sudah Ditandai',
         },
       },
     ],
@@ -260,7 +260,8 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
     return mockCheckHistory.filter((item) => {
       const matchSearch =
         item.draftTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.draftArtCode.toLowerCase().includes(searchTerm.toLowerCase());
+        item.draftArtCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.editor || '').toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchEditor = !editorFilter || item.triggerBy.toLowerCase().includes(editorFilter.toLowerCase());
 
@@ -1030,7 +1031,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                                     : 'bg-white border border-slate-300 text-slate-700'
                                 }`}
                               >
-                                {finding.status}
+                                {finding.status === 'Belum Ditandai' ? 'Sudah Ditandai' : finding.status}
                               </span>
 
                               <a
@@ -1120,7 +1121,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-amber-200 text-amber-800">
-                                {finding.status}
+                                {finding.status === 'Belum Ditandai' ? 'Sudah Ditandai' : finding.status}
                               </span>
 
                               <a
@@ -1284,7 +1285,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
 
                             <div className="flex items-center gap-2 shrink-0">
                               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
-                                {finding.status}
+                                {finding.status === 'Belum Ditandai' ? 'Sudah Ditandai' : finding.status}
                               </span>
 
                               <a
@@ -1430,9 +1431,12 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
             <thead className="bg-slate-50/70 border-b border-slate-200 text-xs font-semibold text-slate-600">
               <tr>
                 <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draf Berita</th>
-                <th className="py-3 px-4 font-semibold">Versi & Waktu</th>
-                <th className="py-3 px-4 font-semibold">Pemicu</th>
+                <th className="py-3 px-4 font-semibold">Waktu Tinjau</th>
+                <th className="py-3 px-4 font-semibold">Ulasan</th>
                 <th className="py-3 px-4 font-semibold">Skor Kemiripan</th>
+                <th className="py-3 px-4 font-semibold">Buku Gaya</th>
+                <th className="py-3 px-4 font-semibold">Deteksi AI</th>
+                <th className="py-3 px-4 font-semibold">SEO & AI-Search</th>
                 <th className="py-3 px-4 font-semibold">Status Temuan</th>
                 <th className="py-3 px-4 text-center font-semibold">Aksi</th>
               </tr>
@@ -1447,21 +1451,22 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                         <p className="font-semibold text-slate-900 text-sm line-clamp-2">
                           {item.draftTitle}
                         </p>
-                        <p className="text-xs text-slate-400 font-mono mt-0.5">{item.draftArtCode}</p>
+                        <p className="text-xs text-slate-400 mt-1 font-normal">
+                          Editor: {item.editor || 'RRI Biak Numfor'}
+                        </p>
                       </div>
                     </td>
 
-                    {/* Versi & Waktu */}
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      <span className="font-semibold text-slate-800 text-xs block">
-                        {item.version}
-                      </span>
-                      <span className="text-[11px] text-slate-400">{item.time}</span>
+                    {/* Waktu Tinjau */}
+                    <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-600">
+                      {item.time}
                     </td>
 
-                    {/* Pemicu */}
-                    <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-600">
-                      {item.triggerBy}
+                    {/* Ulasan */}
+                    <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-700 font-medium">
+                      {item.triggerBy
+                        ? item.triggerBy.replace(/^Pemicu:\s*/i, 'Ulasan: ').replace(/\s*[·•]\s*(Manual|AI|Otomatis)/gi, '')
+                        : 'Ulasan: Editor'}
                     </td>
 
                     {/* Skor Kemiripan */}
@@ -1476,6 +1481,27 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                         }`}
                       >
                         {item.similarityScore}
+                      </span>
+                    </td>
+
+                    {/* Buku Gaya */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                        {item.styleGuideCount ?? 2} Temuan
+                      </span>
+                    </td>
+
+                    {/* Deteksi AI */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200">
+                        {item.aiDetectionCount ?? 1} Temuan
+                      </span>
+                    </td>
+
+                    {/* SEO & AI-Search */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+                        {item.seoAiCount ?? 2} Temuan
                       </span>
                     </td>
 
@@ -1511,7 +1537,7 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-500">
+                  <td colSpan={9} className="py-12 text-center text-slate-500">
                     <p className="font-semibold text-slate-700">Riwayat pemeriksaan tidak ditemukan</p>
                     <p className="text-xs mt-1">Coba sesuaikan kata kunci atau filter pencarian</p>
                   </td>
