@@ -3,7 +3,7 @@ import { ArrowLeft, ExternalLink, Sparkles } from 'lucide-react';
 
 interface DetailHeaderNavProps {
   title: string;
-  artCode: string;
+  artCode?: string;
   journalist: string;
   updatedAt: string;
   isAiAnalyzing: boolean;
@@ -13,7 +13,6 @@ interface DetailHeaderNavProps {
 
 export const DetailHeaderNav: React.FC<DetailHeaderNavProps> = ({
   title,
-  artCode,
   journalist,
   updatedAt,
   isAiAnalyzing,
@@ -36,9 +35,7 @@ export const DetailHeaderNav: React.FC<DetailHeaderNavProps> = ({
         </h1>
 
         <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap">
-          <span className="font-semibold text-slate-800">{artCode}</span>
-          <span>·</span>
-          <span>Editor: {journalist}</span>
+          <span>Penulis: {journalist}</span>
           <span>·</span>
           <span>Terakhir diperbarui: {updatedAt}</span>
         </div>
