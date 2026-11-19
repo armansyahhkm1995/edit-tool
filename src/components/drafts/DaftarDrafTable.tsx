@@ -28,7 +28,7 @@ export const DaftarDrafTable: React.FC<DaftarDrafTableProps> = ({
             <tr>
               <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draft</th>
               <th className="py-3 px-4 font-semibold">Status Artikel</th>
-              <th className="py-3 px-4 font-semibold">Waktu Ubah</th>
+              <th className="py-3 px-4 font-semibold">Waktu Dibuat</th>
               <th className="py-3 px-4 text-center font-semibold">Aksi</th>
             </tr>
           </thead>
@@ -67,7 +67,7 @@ export const DaftarDrafTable: React.FC<DaftarDrafTableProps> = ({
                     </span>
                   </td>
 
-                  {/* Waktu Ubah */}
+                  {/* Waktu Dibuat */}
                   <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-500">
                     {draft.updatedAt}
                   </td>
