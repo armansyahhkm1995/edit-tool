@@ -47,10 +47,10 @@ export const DaftarDrafFilterBar: React.FC<DaftarDrafFilterBarProps> = ({
             Status Artikel: Semua Status
           </option>
           <option value="">Status Artikel: Semua Status</option>
-          <option value="Menunggu Review">Menunggu Review</option>
-          <option value="Diterima">Diterima</option>
-          <option value="Diabaikan">Diabaikan</option>
-          <option value="Telah Diperbaiki">Telah Diperbaiki</option>
+          <option value="Publish">Publish</option>
+          <option value="Review">Review</option>
+          <option value="Draft">Draft</option>
+          <option value="Pending">Pending</option>
         </select>
       </div>
     </div>

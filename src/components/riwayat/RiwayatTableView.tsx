@@ -22,7 +22,7 @@ export const RiwayatTableView: React.FC<RiwayatTableViewProps> = ({
             <tr>
               <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draf Berita</th>
               <th className="py-3 px-4 font-semibold">Waktu Tinjau</th>
-              <th className="py-3 px-4 font-semibold">Ulasan</th>
+              <th className="py-3 px-4 font-semibold">Peninjau</th>
               <th className="py-3 px-4 font-semibold">Status Artikel</th>
               <th className="py-3 px-4 font-semibold">Skor Kemiripan</th>
               <th className="py-3 px-4 font-semibold">Buku Gaya</th>
@@ -56,11 +56,11 @@ export const RiwayatTableView: React.FC<RiwayatTableViewProps> = ({
                     {item.time}
                   </td>
 
-                  {/* Ulasan */}
+                  {/* Peninjau */}
                   <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-700 font-medium">
                     {item.triggerBy
-                      ? item.triggerBy.replace(/^Pemicu:\s*/i, 'Ulasan: ').replace(/\s*[·•]\s*(Manual|AI|Otomatis)/gi, '')
-                      : 'Ulasan: Editor'}
+                      ? item.triggerBy.replace(/^(Ulasan|Pemicu):\s*/i, '').replace(/\s*[·•]\s*(Manual|AI|Otomatis)/gi, '').trim()
+                      : 'Editor'}
                   </td>
 
                   {/* Status Artikel */}

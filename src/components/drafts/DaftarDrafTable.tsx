@@ -50,20 +50,20 @@ export const DaftarDrafTable: React.FC<DaftarDrafTableProps> = ({
                     </p>
                   </td>
 
-                  {/* Status Artikel (Badges for 4 statuses) */}
+                  {/* Status Artikel */}
                   <td className="py-4 px-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        draft.cmsStatus === 'Diterima'
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        draft.cmsStatus === 'Publish'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : draft.cmsStatus === 'Diabaikan'
-                          ? 'bg-slate-100 text-slate-700 border border-slate-200'
-                          : draft.cmsStatus === 'Telah Diperbaiki'
-                          ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                          : 'bg-blue-50 text-blue-700 border border-blue-200'
+                          : draft.cmsStatus === 'Pending'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : draft.cmsStatus === 'Review'
+                          ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                          : 'bg-slate-100 text-slate-700 border border-slate-300'
                       }`}
                     >
-                      {draft.cmsStatus}
+                      {draft.cmsStatus || 'Draft'}
                     </span>
                   </td>
 
