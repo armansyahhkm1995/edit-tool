@@ -1,14 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { User } from '../types';
-import {
-  Users,
-  UserCheck,
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-} from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { UsersKpiCards } from '../components/users/UsersKpiCards';
+import { UsersFilterBar } from '../components/users/UsersFilterBar';
+import { UsersTable } from '../components/users/UsersTable';
 import { AddEditUserModal } from '../components/modals/AddEditUserModal';
 import { DeleteUserModal } from '../components/modals/DeleteUserModal';
 
@@ -78,255 +74,36 @@ export const ManajemenPenggunaPage: React.FC = () => {
       </div>
 
       {/* KPI Cards (2 Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Card 1 */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-            <Users className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-              Total Akun Terdaftar
-            </p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{totalCount} Pengguna</p>
-            <p className="text-xs text-slate-500 mt-0.5">
-              {adminCount} Admin • {editorCount} Editor
-            </p>
-          </div>
-        </div>
-
-        {/* Card 2 */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-            <UserCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-              Status Akun Aktif
-            </p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">
-              {activeCount} Aktif / {inactiveCount} Dinonaktifkan
-            </p>
-            <p className="text-xs text-slate-500 mt-0.5">Log perubahan tersimpan di Audit Log</p>
-          </div>
-        </div>
-      </div>
+      <UsersKpiCards
+        totalCount={totalCount}
+        adminCount={adminCount}
+        editorCount={editorCount}
+        activeCount={activeCount}
+        inactiveCount={inactiveCount}
+      />
 
       {/* Main Table Card (Search & Filters integrated within card) */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        {/* Search and Filter Row inside Table Card */}
-        <div className="p-4 sm:p-5 border-b border-slate-200 space-y-3 bg-white">
-          {/* Row 1: Search Input */}
-          <div className="relative w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Cari nama, atau email pengguna..."
-              className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500 transition-colors"
-            />
-          </div>
+        <UsersFilterBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          roleFilter={roleFilter}
+          setRoleFilter={setRoleFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          onClearFilters={handleClearFilters}
+        />
 
-          {/* Row 2: Filters and Bersihkan Filter button */}
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Filter 1: Peran */}
-            <div className="flex-1 min-w-[220px]">
-              <select
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
-              >
-                <option value="">Peran: Semua (Admin & Editor)</option>
-                <option value="admin">Administrator</option>
-                <option value="editor">Editor</option>
-              </select>
-            </div>
-
-            {/* Filter 2: Status */}
-            <div className="flex-1 min-w-[180px]">
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
-              >
-                <option value="">Status: Semua</option>
-                <option value="active">Aktif</option>
-                <option value="inactive">Non-aktif</option>
-              </select>
-            </div>
-
-            {/* Bersihkan Filter Button (HUG CONTENT, pink/red outline) */}
-            <button
-              onClick={handleClearFilters}
-              className="w-auto shrink-0 px-4 py-2 text-sm font-medium border border-red-200 text-red-500 bg-white hover:bg-red-50 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
-            >
-              Bersihkan Filter
-            </button>
-          </div>
-        </div>
-
-        {/* Table Content */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50/70 border-b border-slate-200 text-xs font-semibold text-slate-600">
-              <tr>
-                <th className="py-3 px-4 sm:px-6 font-semibold">Nama & Email</th>
-                <th className="py-3 px-4 font-semibold">Peran Akses</th>
-                <th className="py-3 px-4 font-semibold">Status Akun</th>
-                <th className="py-3 px-4 text-center font-semibold">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user) => {
-                  const isCurrentUser = currentUser.email === user.email || currentUser.name === user.name;
-                  return (
-                    <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
-                      {/* Nama & Email */}
-                      <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center">
-                            {user.name.charAt(0)}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-900 text-sm">
-                              {user.name}
-                              {isCurrentUser && (
-                                <span className="text-slate-500 font-normal ml-1">(Anda)</span>
-                              )}
-                            </p>
-                            <p className="text-xs text-slate-500 font-mono mt-0.5">{user.email}</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Peran Akses */}
-                      <td className="py-4 px-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                            user.role === 'admin'
-                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                              : 'bg-slate-100 text-slate-700 border border-slate-200'
-                          }`}
-                        >
-                          {user.role === 'admin' ? 'Administrator' : 'Editor'}
-                        </span>
-                      </td>
-
-                      {/* Status Akun (Toggle for Editor, Permanent Active for Admin) */}
-                      <td className="py-4 px-4 whitespace-nowrap">
-                        {user.role === 'admin' ? (
-                          <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              Aktif
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2.5">
-                            <button
-                              type="button"
-                              onClick={() => toggleUserStatus(user.id)}
-                              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
-                                user.status === 'active' ? 'bg-[#1866EF]' : 'bg-slate-200'
-                              }`}
-                              role="switch"
-                              aria-checked={user.status === 'active'}
-                              title={user.status === 'active' ? 'Nonaktifkan Akun' : 'Aktifkan Akun'}
-                            >
-                              <span
-                                aria-hidden="true"
-                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
-                                  user.status === 'active' ? 'translate-x-5' : 'translate-x-0'
-                                }`}
-                              />
-                            </button>
-                            <span
-                              className={`text-xs font-medium ${
-                                user.status === 'active' ? 'text-emerald-600' : 'text-slate-400'
-                              }`}
-                            >
-                              {user.status === 'active' ? 'Aktif' : 'Nonaktif'}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-
-                      {/* Aksi (Pencil & Trash2 buttons - Trash2 hanya untuk Editor) */}
-                      <td className="py-4 px-4 text-center whitespace-nowrap">
-                        <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            onClick={() => {
-                              setEditingUser(user);
-                              setIsAddEditOpen(true);
-                            }}
-                            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-colors cursor-pointer"
-                            title="Edit Pengguna"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </button>
-
-                          {user.role !== 'admin' && (
-                            <button
-                              onClick={() => setDeletingUser(user)}
-                              className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors cursor-pointer"
-                              title="Hapus Pengguna"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={4} className="py-12 text-center text-slate-500">
-                    <p className="font-semibold text-slate-700">Pengguna tidak ditemukan</p>
-                    <p className="text-xs mt-1">Coba sesuaikan kata kunci atau filter pencarian</p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Footer */}
-        <div className="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
-          <div className="flex items-center gap-2">
-            <span>Menampilkan 1-5 dari 42 data</span>
-            <div className="relative">
-              <select className="px-2 py-1 bg-white border border-slate-200 rounded text-xs text-slate-700 cursor-pointer">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button className="px-3 py-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 font-medium text-slate-700 transition-colors">
-              Sebelumnya
-            </button>
-            <button className="w-8 h-8 rounded-md bg-[#1866EF] text-white font-semibold text-xs">
-              1
-            </button>
-            <button className="w-8 h-8 rounded-md border border-slate-200 bg-white hover:bg-slate-50 font-medium text-slate-700 text-xs transition-colors">
-              2
-            </button>
-            <button className="w-8 h-8 rounded-md border border-slate-200 bg-white hover:bg-slate-50 font-medium text-slate-700 text-xs transition-colors">
-              3
-            </button>
-            <span className="px-1 text-slate-400">...</span>
-            <button className="w-8 h-8 rounded-md border border-slate-200 bg-white hover:bg-slate-50 font-medium text-slate-700 text-xs transition-colors">
-              10
-            </button>
-            <button className="px-3 py-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 font-medium text-slate-700 transition-colors">
-              Selanjutnya
-            </button>
-          </div>
-        </div>
+        <UsersTable
+          users={filteredUsers}
+          currentUser={currentUser}
+          onToggleStatus={toggleUserStatus}
+          onEditUser={(user) => {
+            setEditingUser(user);
+            setIsAddEditOpen(true);
+          }}
+          onDeleteUser={(user) => setDeletingUser(user)}
+        />
       </div>
 
       {/* Add / Edit User Modal */}
