@@ -1491,8 +1491,8 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                         <p className="font-semibold text-slate-900 text-sm line-clamp-2">
                           {item.draftTitle}
                         </p>
-                        <p className="text-xs text-slate-400 mt-1 font-normal">
-                          Editor: {item.editor || 'RRI Biak Numfor'}
+                        <p className="text-xs text-slate-500 mt-1 font-normal">
+                          {item.editor || 'Ridwan | RRI Biak Numfor'}
                         </p>
                       </div>
                     </td>
@@ -1571,10 +1571,10 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                           setDetailViewMode('compare');
                         }}
                         className="px-3 py-1.5 bg-[#EFF6FF] hover:bg-blue-100 border border-[#BFDBFE] text-[#1866EF] font-semibold text-xs rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
-                        title="Komparasi Rekomendasi AI vs Portal News RRI"
+                        title="Bandingkan Naskah Rekomendasi AI vs Portal News RRI"
                       >
                         <GitCompare className="w-3.5 h-3.5" />
-                        <span>Compare</span>
+                        <span>Bandingkan</span>
                       </button>
                     </td>
                   </tr>

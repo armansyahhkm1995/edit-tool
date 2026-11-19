@@ -125,13 +125,13 @@ export const DaftarDrafPage: React.FC = () => {
                     className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                     onClick={() => handleOpenDetail(draft)}
                   >
-                    {/* Judul Draft (Title single-line with ellipsis, and subtitle "Editor: RRI ...") */}
+                    {/* Judul Draft (Title single-line with ellipsis, and subtitle nama editor | satker) */}
                     <td className="py-4 px-4 sm:px-6 max-w-md">
                       <p className="font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors text-sm">
                         {draft.title}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1 font-normal">
-                        Editor: {draft.journalist}
+                      <p className="text-xs text-slate-500 mt-1 font-normal">
+                        {draft.journalist}
                       </p>
                     </td>
 
