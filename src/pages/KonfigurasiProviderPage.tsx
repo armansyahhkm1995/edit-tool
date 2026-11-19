@@ -43,7 +43,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
       icon: Copy,
       iconBg: 'bg-emerald-50 text-emerald-600 border-emerald-200',
       description:
-        'Tentukan batas maksimal toleransi persentase kemiripan naskah terhadap sumber eksternal atau sindikasi berita. Jika skor melebihi batas ini, sistem akan memicu status peringatan bagi editor.',
+        'Tentukan batas maksimal toleransi persentase kemiripan draft berita terhadap sumber eksternal atau sindikasi berita. Jika skor melebihi batas ini, sistem akan memicu status peringatan bagi editor.',
       label: 'Batas Toleransi Skor Kemiripan:',
       value: similarityThreshold,
       setValue: setSimilarityThreshold,
@@ -61,7 +61,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
       icon: BookOpen,
       iconBg: 'bg-amber-50 text-amber-600 border-amber-200',
       description:
-        'Tentukan ambang batas minimal persentase kepatuhan naskah terhadap kaidah jurnalistik, ejaan baku KBBI, serta pedoman buku gaya redaksional RRI.',
+        'Tentukan ambang batas minimal persentase kepatuhan draft berita terhadap kaidah jurnalistik, ejaan baku KBBI, serta pedoman buku gaya redaksional RRI.',
       label: 'Ambang Batas Kepatuhan Buku Gaya:',
       value: styleGuideThreshold,
       setValue: setStyleGuideThreshold,
@@ -79,7 +79,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
       icon: Search,
       iconBg: 'bg-purple-50 text-purple-600 border-purple-200',
       description:
-        'Tentukan ambang batas skor minimal optimasi mesin pencari konvensional (struktur judul, kepadatan kata kunci, dan keterbacaan lead naskah).',
+        'Tentukan ambang batas skor minimal optimasi mesin pencari konvensional (struktur judul, kepadatan kata kunci, dan keterbacaan lead draft berita).',
       label: 'Ambang Batas Skor Minimal SEO:',
       value: seoThreshold,
       setValue: setSeoThreshold,
@@ -97,7 +97,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
       icon: Sparkles,
       iconBg: 'bg-indigo-50 text-indigo-600 border-indigo-200',
       description:
-        'Tentukan ambang batas skor minimal kesiapan naskah untuk dikutip dan diindeks oleh mesin pencari AI (seperti Perplexity, SearchGPT, dan Google AI Overview).',
+        'Tentukan ambang batas skor minimal kesiapan draft berita untuk dikutip dan diindeks oleh mesin pencari AI (seperti Perplexity, SearchGPT, dan Google AI Overview).',
       label: 'Ambang Batas Optimasi AI-Search:',
       value: aiSearchThreshold,
       setValue: setAiSearchThreshold,
@@ -115,7 +115,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
       icon: Bot,
       iconBg: 'bg-blue-50 text-blue-600 border-blue-200',
       description:
-        'Tentukan batas maksimal toleransi indikasi probabilitas naskah ditulis oleh model AI sebelum diwajibkan tinjau ulang dan verifikasi langsung oleh editor.',
+        'Tentukan batas maksimal toleransi indikasi probabilitas draft berita ditulis oleh model AI sebelum diwajibkan tinjau ulang dan verifikasi langsung oleh editor.',
       label: 'Batas Toleransi Deteksi AI:',
       value: aiDetectionThreshold,
       setValue: setAiDetectionThreshold,
@@ -135,7 +135,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
           Konfigurasi Ambang Batas Matriks
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
-          Kelola parameter ambang batas (threshold) analisis deteksi kemiripan naskah, kepatuhan buku gaya, optimasi SEO, AI-Search, dan deteksi AI.
+          Kelola parameter ambang batas (threshold) analisis deteksi kemiripan draft berita, kepatuhan buku gaya, optimasi SEO, AI-Search, dan deteksi AI.
         </p>
       </div>
 
@@ -151,7 +151,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
               </h2>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
-              Tentukan batas toleransi persentase skor atau ambang batas minimal untuk masing-masing matriks pemeriksaan naskah. Jika skor naskah berada di luar ambang batas yang ditetapkan, sistem akan otomatis memicu peringatan waspada bagi Editor sebelum diizinkan terbit.
+              Tentukan batas toleransi persentase skor atau ambang batas minimal untuk masing-masing matriks pemeriksaan draft berita. Jika skor draft berita berada di luar ambang batas yang ditetapkan, sistem akan otomatis memicu peringatan waspada bagi Editor sebelum diizinkan terbit.
             </p>
           </div>
 

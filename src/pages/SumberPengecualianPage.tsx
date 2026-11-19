@@ -51,7 +51,7 @@ export const SumberPengecualianPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
             Kelola daftar URL atau domain (whitelist) yang dikecualikan dari kalkulasi skor
             kemiripan AI. Kutipan dari sumber di daftar ini tidak akan menambah persentase
-            plagiarisme draf.
+            plagiarisme draft berita.
           </p>
         </div>
 

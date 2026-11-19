@@ -20,7 +20,7 @@ export const RiwayatTableView: React.FC<RiwayatTableViewProps> = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50/70 border-b border-slate-200 text-xs font-semibold text-slate-600">
             <tr>
-              <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draf Berita</th>
+              <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draft Berita</th>
               <th className="py-3 px-4 font-semibold">Waktu Tinjau</th>
               <th className="py-3 px-4 font-semibold">Peninjau</th>
               <th className="py-3 px-4 font-semibold">Status Artikel</th>
@@ -125,7 +125,7 @@ export const RiwayatTableView: React.FC<RiwayatTableViewProps> = ({
                         onSelectCompare(item);
                       }}
                       className="px-3 py-1.5 bg-[#EFF6FF] hover:bg-blue-100 border border-[#BFDBFE] text-[#1866EF] font-semibold text-xs rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
-                      title="Bandingkan Naskah Rekomendasi AI vs Portal News RRI"
+                      title="Bandingkan Draft Berita Rekomendasi AI vs Portal News RRI"
                     >
                       <GitCompare className="w-3.5 h-3.5" />
                       <span>Bandingkan</span>

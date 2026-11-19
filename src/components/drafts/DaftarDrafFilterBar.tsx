@@ -28,7 +28,7 @@ export const DaftarDrafFilterBar: React.FC<DaftarDrafFilterBarProps> = ({
             setSearchTerm(e.target.value);
             onFilterChange();
           }}
-          placeholder="Cari judul artikel atau nama penulis ..."
+          placeholder="Cari draft berita atau nama penulis"
           className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500 transition-colors"
         />
       </div>

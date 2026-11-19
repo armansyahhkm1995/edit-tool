@@ -17,7 +17,7 @@ export const DetailArticleColumn: React.FC<DetailArticleColumnProps> = ({
       <div className="shrink-0 p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-white z-10">
         <div>
           <h2 className="text-sm font-bold text-slate-900">
-            Naskah Berita (Read-Only dari CMS)
+            Draft Berita (Read-Only dari CMS)
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             428 Kata · 3 Paragraf · 06 Nov 2026, 14:45 WIB

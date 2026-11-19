@@ -41,12 +41,12 @@ export const DeactivateUserModal: React.FC<DeactivateUserModalProps> = ({
             <p>
               Apa Anda yakin ingin menonaktifkan pengguna{' '}
               <span className="font-semibold text-slate-900">{user.name}</span>? Pengguna tidak akan
-              bisa mengakses dasbor portal pemeriksa naskah sampai Anda aktifkan kembali akunnya.
+              bisa mengakses dasbor portal pemeriksa draft berita sampai Anda aktifkan kembali akunnya.
             </p>
           ) : (
             <p>
               Apa Anda yakin ingin mengaktifkan kembali akses pengguna{' '}
-              <span className="font-semibold text-slate-900">{user.name}</span> ke portal pemeriksa naskah?
+              <span className="font-semibold text-slate-900">{user.name}</span> ke portal pemeriksa draft berita?
             </p>
           )}
         </div>

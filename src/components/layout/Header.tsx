@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
   const getBreadcrumbTitle = () => {
     switch (currentPage) {
       case 'daftar-draf':
-        return 'Daftar Draf Berita';
+        return 'Daftar Draft Berita';
       case 'detail-draf':
         return 'Peluncuran Satelit Nusantara ...';
       case 'riwayat-pemeriksaan':
@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
 
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 text-xs truncate">
-          <span className="hidden sm:inline text-slate-500 font-normal">Portal Pemeriksa Naskah</span>
+          <span className="hidden sm:inline text-slate-500 font-normal">Portal Pemeriksa Draft Berita</span>
           <span className="hidden sm:inline text-slate-300 font-light">/</span>
           <span className="font-semibold sm:font-medium text-[#1866EF] truncate">
             {getBreadcrumbTitle()}

@@ -196,13 +196,13 @@ export const RiwayatSplitDetailView: React.FC<RiwayatSplitDetailViewProps> = ({
 
       {/* Main Split-View Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Naskah Berita Read-Only dari CMS (7 Cols) */}
+        {/* LEFT COLUMN: Draft Berita Read-Only dari CMS (7 Cols) */}
         <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col overflow-hidden lg:h-[calc(100vh-210px)] lg:max-h-[calc(100vh-210px)] lg:min-h-[560px] lg:sticky lg:top-4">
           {/* Header */}
           <div className="shrink-0 p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-white z-10">
             <div>
               <h2 className="text-sm font-bold text-slate-900">
-                Naskah Berita (Read-Only dari CMS)
+                Draft Berita (Read-Only dari CMS)
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 428 Kata · 3 Paragraf · 06 Nov 2026, 14:45
@@ -718,7 +718,7 @@ export const RiwayatSplitDetailView: React.FC<RiwayatSplitDetailViewProps> = ({
                           <div className="bg-slate-50 p-4 space-y-3 animate-fade-in border-t border-slate-200">
                             <div className="bg-white border border-slate-200 p-3 rounded-md">
                               <p className="text-xs font-bold text-slate-900 mb-1">
-                                KUTIPAN NASKAH / USULAN:
+                                KUTIPAN DRAFT BERITA / USULAN:
                               </p>
                               <p className="text-xs text-slate-700">
                                 "{finding.matchedSnippet}"

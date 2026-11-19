@@ -32,7 +32,7 @@ export const DetailFindingsColumn: React.FC<DetailFindingsColumnProps> = ({
         <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
           {/* Score Overview Card */}
           <div className="shrink-0 p-4 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-900">Skor Kemiripan Naskah:</span>
+            <span className="text-xs font-semibold text-slate-900">Skor Kemiripan Draft Berita:</span>
             <div className="flex items-center gap-2">
               <span className="text-[20px] font-bold text-slate-900 leading-none">18.4%</span>
               <span className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-md">
@@ -94,7 +94,7 @@ export const DetailFindingsColumn: React.FC<DetailFindingsColumnProps> = ({
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 font-medium">
                     <span>Lokasi: Paragraf {finding.paragraphIndex || 2}</span>
-                    <span className="text-blue-600 font-semibold">Lihat ke naskah →</span>
+                    <span className="text-blue-600 font-semibold">Lihat ke draft berita →</span>
                   </div>
                 </div>
               );
@@ -171,7 +171,7 @@ export const DetailFindingsColumn: React.FC<DetailFindingsColumnProps> = ({
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 font-medium">
                     <span>Lokasi: Paragraf {finding.paragraphIndex || 3}</span>
-                    <span className="text-amber-700 font-semibold">Lihat ke naskah →</span>
+                    <span className="text-amber-700 font-semibold">Lihat ke draft berita →</span>
                   </div>
                 </div>
               );
@@ -287,7 +287,7 @@ export const DetailFindingsColumn: React.FC<DetailFindingsColumnProps> = ({
                         isAiSearch ? 'text-purple-600' : 'text-blue-600'
                       }`}
                     >
-                      Lihat ke naskah →
+                      Lihat ke draft berita →
                     </span>
                   </div>
                 </div>

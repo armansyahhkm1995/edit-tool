@@ -28,7 +28,7 @@ export const DetailHeaderNav: React.FC<DetailHeaderNavProps> = ({
           className="text-xs font-semibold text-slate-500 hover:text-slate-900 inline-flex items-center gap-1.5 cursor-pointer transition-colors py-1 px-1 -ml-1 rounded-md hover:bg-slate-100"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Kembali ke Daftar Draf Berita</span>
+          <span>Kembali ke Daftar Draft Berita</span>
         </button>
 
         <h1 className="text-xl sm:text-2xl font-bold text-slate-950 tracking-tight leading-snug">

@@ -26,7 +26,7 @@ export const DaftarDrafTable: React.FC<DaftarDrafTableProps> = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50/70 border-y border-slate-200 text-xs font-semibold text-slate-600">
             <tr>
-              <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draft</th>
+              <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draft Berita</th>
               <th className="py-3 px-4 font-semibold">Status Artikel</th>
               <th className="py-3 px-4 font-semibold">Waktu Dibuat</th>
               <th className="py-3 px-4 text-center font-semibold">Aksi</th>
@@ -80,7 +80,7 @@ export const DaftarDrafTable: React.FC<DaftarDrafTableProps> = ({
                     <div className="flex items-center justify-center">
                       <button
                         onClick={() => onOpenDetail(draft)}
-                        title="Edit / Periksa Draf"
+                        title="Edit / Periksa Draft Berita"
                         className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-300 text-slate-700 hover:text-blue-600 transition-colors inline-flex items-center justify-center shadow-2xs"
                       >
                         <Pencil className="w-3.5 h-3.5" />
@@ -92,7 +92,7 @@ export const DaftarDrafTable: React.FC<DaftarDrafTableProps> = ({
             ) : (
               <tr>
                 <td colSpan={4} className="py-12 text-center text-slate-500">
-                  <p className="font-semibold text-slate-700">Tidak ada draf yang cocok</p>
+                  <p className="font-semibold text-slate-700">Tidak ada draft berita yang cocok</p>
                   <p className="text-xs mt-1">Coba sesuaikan kata kunci pencarian atau filter status</p>
                 </td>
               </tr>

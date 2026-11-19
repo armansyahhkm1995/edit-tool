@@ -32,7 +32,7 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
       'Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak 12 menit pasca lepas landas. Dalam taklimat resminya, Kepala Badan Riset dan Inovasi Nasional (BRIN) mengonfirmasi seluruh subsistem satelit berfungsi prima dalam lintasan orbit nominal.\n\n' +
       'Keberhasilan misi ini ditargetkan memperluas konektivitas internet 5G untuk ribuan fasilitas publik, puskesmas terluar, pos perbatasan negara, dan sekolah di kawasan Terdepan, Terluar, dan Tertinggal (3T) di penjuru Indonesia Timur.';
     navigator.clipboard.writeText(fullAiText);
-    showToast('Naskah rekomendasi AI berhasil disalin ke clipboard', 'success');
+    showToast('Draft berita rekomendasi AI berhasil disalin ke clipboard', 'success');
   };
 
   return (
@@ -50,7 +50,7 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
 
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-blue-700 tracking-tight">
-            Komparasi Naskah: Simulasi Rekomendasi AI vs Artikel Portal News RRI
+            Komparasi Draft Berita: Simulasi Rekomendasi AI vs Artikel Portal News RRI
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-4xl leading-relaxed">
             Membandingkan draf artikel yang disimulasikan telah diperbaiki otomatis oleh AI berdasarkan seluruh temuan matriks (sebelah kiri) dengan artikel yang telah dipublikasikan di Portal News RRI (sebelah kanan).
@@ -75,7 +75,7 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
               className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 self-start"
             >
               <Copy className="w-3.5 h-3.5" />
-              <span>Salin Naskah</span>
+              <span>Salin Draft Berita</span>
             </button>
           </div>
 
@@ -89,10 +89,10 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
             </span>
           </div>
 
-          {/* Judul Naskah AI */}
+          {/* Judul Draft Berita AI */}
           <div className="space-y-2">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Judul Naskah (Optimasi AI)
+              Judul Draft Berita (Optimasi AI)
             </div>
             <h2 className="text-base font-bold text-slate-900 leading-snug">
               Satelit Nusantara Tiga Resmi Mengorbit di Biak, Siap Akselerasi Internet 5G Wilayah 3T
@@ -129,10 +129,10 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
             </div>
           </div>
 
-          {/* Batang Tubuh Naskah AI */}
+          {/* Batang Tubuh Draft Berita AI */}
           <div className="space-y-4">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Batang Tubuh Naskah & Catatan Rekomendasi AI
+              Batang Tubuh Draft Berita & Catatan Rekomendasi AI
             </div>
 
             {/* Paragraf 1 Batang Tubuh */}
@@ -155,7 +155,7 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
                     </span>
                   </div>
                   <p className="text-emerald-800 text-[11px] leading-relaxed">
-                    Teks kutipan telah diparafrase dari siaran rilis kompas.com/antaranews.com untuk mencegah duplikasi konten dan menaikkan skor orisinalitas naskah.
+                    Teks kutipan telah diparafrase dari siaran rilis kompas.com/antaranews.com untuk mencegah duplikasi konten dan menaikkan skor orisinalitas draft berita.
                   </p>
                 </div>
               </div>
@@ -245,16 +245,16 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
             </span>
           </div>
 
-          {/* Judul Naskah Live */}
+          {/* Judul Draft Berita Live */}
           <div className="space-y-2">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Judul Naskah Terbit
+              Judul Draft Berita Terbit
             </div>
             <h2 className="text-base font-bold text-slate-900 leading-snug">
               {selectedHistory.draftTitle || 'Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit'}
             </h2>
             <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-500">
-              Judul orisinil naskah saat ini yang ditayangkan pada halaman publik portal berita RRI.
+              Judul orisinil draft berita saat ini yang ditayangkan pada halaman publik portal berita RRI.
             </div>
           </div>
 
@@ -271,7 +271,7 @@ export const RiwayatCompareView: React.FC<RiwayatCompareViewProps> = ({
           {/* Batang Tubuh Paragraf Live */}
           <div className="space-y-4">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Batang Tubuh Naskah Terbit di Portal
+              Batang Tubuh Draft Berita Terbit di Portal
             </div>
 
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">

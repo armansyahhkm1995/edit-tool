@@ -101,7 +101,7 @@ export const DetailSplitViewPage: React.FC = () => {
         seoCount={seoCount}
       />
 
-      {/* MAIN SPLIT-VIEW: KIRI = DAFTAR TEMUAN (5 COLS), KANAN = NASKAH ARTIKEL (7 COLS) */}
+      {/* MAIN SPLIT-VIEW: KIRI = DAFTAR TEMUAN (5 COLS), KANAN = DRAFT BERITA (7 COLS) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <DetailFindingsColumn
           activeTab={activeTab}

@@ -52,7 +52,7 @@ export const DetailStatusCards: React.FC<DetailStatusCardsProps> = ({
             {isAiAnalyzing ? '...' : `${aiDetectionScore}%`}
           </div>
           <div className="text-[11px] text-blue-700/90 mt-1">
-            {isAiAnalyzing ? 'Sedang menganalisis naskah' : 'Indikasi teks manusiawi dominan'}
+            {isAiAnalyzing ? 'Sedang menganalisis draft berita' : 'Indikasi teks manusiawi dominan'}
           </div>
         </div>
       </div>

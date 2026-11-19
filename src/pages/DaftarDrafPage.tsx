@@ -47,8 +47,8 @@ export const DaftarDrafPage: React.FC = () => {
             50 daftar draft berita CMS
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
-            Daftar antrean draf berita yang tersinkronisasi secara langsung dari CMS RRI. Pantau status
-            pemeriksaan dan pilih draf untuk melihat detail analisis AI
+            Daftar antrean draft berita yang tersinkronisasi secara langsung dari CMS RRI. Pantau status
+            pemeriksaan dan pilih draft berita untuk melihat detail analisis AI
           </p>
         </div>
 
@@ -57,7 +57,7 @@ export const DaftarDrafPage: React.FC = () => {
           className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#1866EF] hover:bg-blue-700 text-white font-semibold text-sm transition-colors shadow-sm shrink-0 self-start sm:self-auto cursor-pointer"
         >
           <RotateCw className="w-4 h-4" />
-          <span>Tarik Draf Baru dari CMS</span>
+          <span>Tarik Draft Berita Baru dari CMS</span>
         </button>
       </div>
 

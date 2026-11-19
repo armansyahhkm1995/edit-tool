@@ -80,7 +80,7 @@ export const LoginPage: React.FC = () => {
         {/* Bottom Hero Text Block (Aligned to bottom as in Figma MAX primaryAxisAlign) */}
         <div className="relative z-10 space-y-4 max-w-lg mb-4 sm:mb-8">
           <h1 className="font-['Oxanium'] font-bold text-3xl sm:text-4xl md:text-[38px] text-white tracking-tight leading-tight">
-            Portal Pemeriksa<br />Naskah RRI
+            Portal Pemeriksa<br />Draft Berita RRI
           </h1>
           <p className="text-sm font-semibold text-white/90 max-w-sm leading-relaxed">
             Menjaga orisinalitas, standar redaksi, dan kualitas pemberitaan publik.

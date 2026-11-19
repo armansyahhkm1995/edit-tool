@@ -41,7 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
         <div className="flex flex-col">
           <img src={rriLogo} alt="RRI Radio Republik Indonesia" className="h-8 w-auto object-contain object-left" />
           <span className="text-[11px] text-slate-500 font-medium mt-1.5 tracking-tight">
-            Portal Pemeriksa Naskah
+            Portal Pemeriksa Draft Berita
           </span>
         </div>
 
@@ -71,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
             >
               <div className="flex items-center gap-2.5 truncate">
                 <Newspaper className="w-4 h-4 shrink-0" />
-                <span className="truncate">Daftar Draf Berita</span>
+                <span className="truncate">Daftar Draft Berita</span>
               </div>
               <ChevronRight
                 className={`w-3.5 h-3.5 shrink-0 ${

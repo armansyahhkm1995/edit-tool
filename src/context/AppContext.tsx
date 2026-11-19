@@ -246,7 +246,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const runAiInspection = (draftId: string) => {
     setIsAiAnalyzing(true);
-    showToast('Memulai pemeriksaan AI pada naskah berita...', 'info', 'AI Engine');
+    showToast('Memulai pemeriksaan AI pada draft berita...', 'info', 'AI Engine');
 
     setTimeout(() => {
       setIsAiAnalyzing(false);
@@ -287,9 +287,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const pullNewDraftsFromCMS = () => {
-    showToast('Menghubungkan ke CMS RRI untuk sinkronisasi draf...', 'info');
+    showToast('Menghubungkan ke CMS RRI untuk sinkronisasi draft berita...', 'info');
     setTimeout(() => {
-      showToast('Berhasil menarik 3 draf berita terbaru dari CMS RRI', 'success');
+      showToast('Berhasil menarik 3 draft berita terbaru dari CMS RRI', 'success');
     }, 1200);
   };
 

@@ -28,13 +28,13 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
   // Handle version toggle
   const handleToggleVersion = (versionId: string) => {
     if (activeVersionId === versionId) {
-      showToast('Harus ada minimal 1 versi naskah pemeriksaan yang aktif.', 'warning');
+      showToast('Harus ada minimal 1 versi draft berita pemeriksaan yang aktif.', 'warning');
       return;
     }
     setActiveVersionId(versionId);
     const target = DRAFT_VERSIONS_DATA.find((v) => v.id === versionId);
     showToast(
-      `${target?.version || 'Versi'} berhasil diaktifkan sebagai naskah pemeriksaan aktif.`,
+      `${target?.version || 'Versi'} berhasil diaktifkan sebagai draft berita pemeriksaan aktif.`,
       'success'
     );
   };

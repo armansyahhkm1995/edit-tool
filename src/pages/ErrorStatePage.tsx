@@ -24,7 +24,7 @@ export const ErrorStatePage: React.FC<ErrorStatePageProps> = ({ code }) => {
           icon: <ShieldAlert className="w-12 h-12 text-red-600" />,
           title: 'Akses Ditolak',
           description: 'Halaman ini khusus untuk Administrator. Anda saat ini masuk sebagai Editor.',
-          actionLabel: 'Kembali ke Daftar Draf',
+          actionLabel: 'Kembali ke Daftar Draft Berita',
           actionIcon: <ArrowLeft className="w-4 h-4" />,
           onClick: () => {
             setCurrentPage('daftar-draf');
@@ -33,10 +33,10 @@ export const ErrorStatePage: React.FC<ErrorStatePageProps> = ({ code }) => {
       case 404:
         return {
           icon: <FileQuestion className="w-12 h-12 text-amber-600" />,
-          title: 'Draf Tidak Ditemukan',
+          title: 'Draft Berita Tidak Ditemukan',
           description:
-            'Naskah ini mungkin telah dihapus atau ditarik dari antrean CMS utama.',
-          actionLabel: 'Kembali ke Daftar Draft',
+            'Draft berita ini mungkin telah dihapus atau ditarik dari antrean CMS utama.',
+          actionLabel: 'Kembali ke Daftar Draft Berita',
           actionIcon: <ArrowLeft className="w-4 h-4" />,
           onClick: () => setCurrentPage('daftar-draf'),
         };
@@ -55,7 +55,7 @@ export const ErrorStatePage: React.FC<ErrorStatePageProps> = ({ code }) => {
           icon: <ServerOff className="w-12 h-12 text-red-600" />,
           title: 'Gagal Terhubung ke Portal RRI',
           description:
-            'Analisis naskah selesai, namun server CMS (rri.co.id) tidak merespons pengiriman data',
+            'Analisis draft berita selesai, namun server CMS (rri.co.id) tidak merespons pengiriman data',
           actionLabel: 'Muat Ulang Laman',
           actionIcon: <RotateCw className="w-4 h-4" />,
           onClick: () => window.location.reload(),

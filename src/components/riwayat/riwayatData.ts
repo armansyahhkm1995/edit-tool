@@ -102,7 +102,7 @@ export const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
           type: 'seo',
           title: 'Kurang Sub-Heading Terstruktur',
           description:
-            'Naskah belum memiliki H2/H3 dan penjelasan detail mengenai target bulan operasional.',
+            'Draft berita belum memiliki H2/H3 dan penjelasan detail mengenai target bulan operasional.',
           status: 'Sudah Ditandai',
         },
       },
@@ -121,7 +121,7 @@ export const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     styleGuideScore: '3 Pelanggaran Format',
     seoAiScore: 'Minim Konteks AI-Search',
     changeSummary:
-      'Naskah draf awal hasil sinkronisasi otomatis CMS RRI sebelum dilakukan uji kemiripan dan penyuntingan editor.',
+      'Draft berita awal hasil sinkronisasi otomatis CMS RRI sebelum dilakukan uji kemiripan dan penyuntingan editor.',
     title: 'Peluncuran Satelit Nusantara Tiga Sukses Meluncur dari Stasiun Antariksa Biak',
     lead: 'BIAK — Satelit Nusantara Tiga sukses meluncur Kamis dini hari dari kompleks peluncuran antariksa Biak Numfor.',
     sections: [
@@ -142,7 +142,7 @@ export const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
         findingNote: {
           type: 'buku_gaya',
           title: 'Nomenklatur Lembaga Informal',
-          description: 'Belum menyebut kepanjangan BRIN pada kemunculan pertama naskah.',
+          description: 'Belum menyebut kepanjangan BRIN pada kemunculan pertama draft berita.',
           status: 'Sudah Ditandai',
         },
       },

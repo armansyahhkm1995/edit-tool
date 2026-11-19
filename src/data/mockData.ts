@@ -292,7 +292,7 @@ export const mockDefaultDraft: CMSDraft = {
       severity: 'Rendah',
       status: 'Sudah Ditandai',
       title: 'Struktur Heading (H2 / H3 Tag)',
-      matchedSnippet: 'Belum terdapat sub-heading terstruktur pada naskah berita',
+      matchedSnippet: 'Belum terdapat sub-heading terstruktur pada draft berita',
       recommendation: 'Saran Heading: Tambahkan H2 "Spesifikasi Roket & Ketinggian Orbit Geostasioner" sebelum paragraf 2 dan H2 "Dampak Konektivitas Internet 5G Kawasan 3T" sebelum paragraf 4.',
       paragraphIndex: 2,
     },
@@ -816,7 +816,7 @@ export const mockNotifications: NotificationItem[] = [
   {
     id: 'notif-5',
     section: 'Kemarin',
-    title: 'Gagal menganalisis naskah. Provider AI tidak merespons (Timeout)',
+    title: 'Gagal menganalisis draft berita. Provider AI tidak merespons (Timeout)',
     time: '12 Okt 2026, 11:20',
     status: 'error',
     isRead: true,

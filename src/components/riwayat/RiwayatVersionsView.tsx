@@ -53,7 +53,7 @@ export const RiwayatVersionsView: React.FC<RiwayatVersionsViewProps> = ({
               Daftar Riwayat Versi Pemeriksaan
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Bandingkan versi naskah terdahulu dengan versi terkini secara berdampingan.
+              Bandingkan versi draft berita terdahulu dengan versi terkini secara berdampingan.
             </p>
           </div>
           <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-[#1866EF]">
@@ -66,7 +66,7 @@ export const RiwayatVersionsView: React.FC<RiwayatVersionsViewProps> = ({
             <table className="w-full text-left text-xs min-w-[960px]">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-600 bg-slate-50/80">
-                  <th className="py-3 px-4 font-semibold">Versi Naskah Berita</th>
+                  <th className="py-3 px-4 font-semibold">Versi Draft Berita</th>
                   <th className="py-3 px-4 font-semibold">Dibuat Oleh</th>
                   <th className="py-3 px-4 font-semibold">Deteksi AI</th>
                   <th className="py-3 px-4 font-semibold">Kemiripan</th>
