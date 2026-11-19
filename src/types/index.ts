@@ -111,6 +111,10 @@ export interface AIProviderConfig {
   similarityEngine: 'inhouse' | 'external';
   externalApiKey: string;
   similarityThreshold: number;
+  styleGuideThreshold: number;
+  seoThreshold: number;
+  aiSearchThreshold: number;
+  aiDetectionThreshold: number;
 }
 
 export interface AuditLogItem {
