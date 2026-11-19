@@ -144,9 +144,9 @@ export const mockDefaultDraft: CMSDraft = {
       title: 'Kutipan Identik Sindikasi Berita',
       matchedSnippet: '...roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner...',
       similarityPercent: 78,
-      matchedSource: 'antaranews.com',
+      matchedSource: 'kompas.com',
       aiIndication: 'Indikasi AI: 12% (Aman)',
-      recommendation: 'Kutipan ini identik dengan siaran rilis Antara News. Jika ini kutipan resmi, sertakan atribusi narasumber atau parafrase kalimat agar terhindar dari penalti SEO sindikasi berita.',
+      recommendation: 'Kutipan ini identik dengan siaran kompas.com. Jika ini kutipan resmi, sertakan atribusi narasumber atau parafrase kalimat agar terhindar dari penalti SEO sindikasi berita.',
       paragraphIndex: 2,
     },
     {
@@ -497,6 +497,7 @@ export const mockCheckHistory: CheckHistoryItem[] = [
     styleGuideCount: 2,
     aiDetectionCount: 1,
     seoAiCount: 2,
+    articleStatus: 'Publish',
   },
   {
     id: 'hist-2',
@@ -516,6 +517,7 @@ export const mockCheckHistory: CheckHistoryItem[] = [
     styleGuideCount: 3,
     aiDetectionCount: 2,
     seoAiCount: 3,
+    articleStatus: 'Review',
   },
   {
     id: 'hist-3',
@@ -535,6 +537,7 @@ export const mockCheckHistory: CheckHistoryItem[] = [
     styleGuideCount: 4,
     aiDetectionCount: 5,
     seoAiCount: 4,
+    articleStatus: 'Draft',
   },
   {
     id: 'hist-4',
@@ -554,6 +557,7 @@ export const mockCheckHistory: CheckHistoryItem[] = [
     styleGuideCount: 2,
     aiDetectionCount: 1,
     seoAiCount: 1,
+    articleStatus: 'Pending',
   },
   {
     id: 'hist-5',
@@ -573,6 +577,7 @@ export const mockCheckHistory: CheckHistoryItem[] = [
     styleGuideCount: 0,
     aiDetectionCount: 0,
     seoAiCount: 1,
+    articleStatus: 'Publish',
   },
   {
     id: 'hist-6',
@@ -592,6 +597,7 @@ export const mockCheckHistory: CheckHistoryItem[] = [
     styleGuideCount: 1,
     aiDetectionCount: 1,
     seoAiCount: 0,
+    articleStatus: 'Review',
   },
 ];
 

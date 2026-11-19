@@ -13,6 +13,9 @@ import {
   Copy,
   Check,
   Bot,
+  GitCompare,
+  Globe,
+  Sparkles,
 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
@@ -264,10 +267,11 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
         (item.editor || '').toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchEditor = !editorFilter || item.triggerBy.toLowerCase().includes(editorFilter.toLowerCase());
+      const matchStatus = !statusFilter || item.articleStatus === statusFilter;
 
-      return matchSearch && matchEditor;
+      return matchSearch && matchEditor && matchStatus;
     });
-  }, [searchTerm, editorFilter]);
+  }, [searchTerm, editorFilter, statusFilter]);
 
   const handleClearFilters = () => {
     setSearchTerm('');
@@ -435,12 +439,10 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
       );
     }
 
-    // 2. DETAIL VIEW MODE: COMPARE VIEW (SIDE-BY-SIDE WITH INLINE FINDINGS)
+    // 2. DETAIL VIEW MODE: COMPARE VIEW (SIDE-BY-SIDE: SIMULASI REKOMENDASI AI VS PORTAL NEWS RRI)
     if (detailViewMode === 'compare') {
-      const latest = DRAFT_VERSIONS_DATA.find((v) => v.id === activeVersionId) || DRAFT_VERSIONS_DATA[0];
-      const compareTarget =
-        selectedCompareVersion ||
-        (activeVersionId === 'v1-0' ? DRAFT_VERSIONS_DATA[0] : DRAFT_VERSIONS_DATA[2]);
+      const liveArticleDate = selectedHistory.time || '06 Nov 2026, 14:45';
+      const aiSimulatedDate = selectedHistory.time || '06 Nov 2026, 14:15';
 
       return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-6 animate-fade-in">
@@ -448,58 +450,45 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
           <div className="space-y-3">
             <button
               type="button"
-              onClick={() => setDetailViewMode('versions')}
-              className="text-xs font-semibold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1 cursor-pointer transition-colors py-1 px-1 rounded-md hover:bg-slate-100"
+              onClick={() => setSelectedHistory(null)}
+              className="text-xs font-semibold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1.5 cursor-pointer transition-colors py-1 px-1 rounded-md hover:bg-slate-100"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Kembali ke Riwayat Versi</span>
+              <span>Kembali ke Riwayat Pemeriksaan</span>
             </button>
 
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-blue-700 tracking-tight">
-                Perbandingan Berdampingan Versi Draft Berita
+                Komparasi Naskah: Simulasi Rekomendasi AI vs Artikel Portal News RRI
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-4xl leading-relaxed">
-                Membandingkan <strong className="text-slate-900">{compareTarget.version}</strong> dengan{' '}
-                <strong className="text-slate-900">{latest.version} (Versi Utama Aktif)</strong>.
-                Daftar temuan dan status perbaikan ditampilkan tepat pada masing-masing paragraf tanpa mempersempit ruang pandang artikel.
+                Membandingkan draf artikel yang disimulasikan telah diperbaiki otomatis oleh AI berdasarkan seluruh temuan matriks (sebelah kiri) dengan artikel yang telah dipublikasikan di Portal News RRI (sebelah kanan).
               </p>
             </div>
           </div>
 
-          {/* Side-by-Side 2 Column Comparison Grid (Full Width, NO right sidebar!) */}
+          {/* Side-by-Side 2 Column Comparison Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            {/* Column 1: Versi Pilihan (Target Compare) */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
+            {/* COLUMN 1: DRAFT ARTIKEL SIMULASI REKOMENDASI AI (LEFT) */}
+            <div className="bg-white border-2 border-blue-200 rounded-xl p-5 sm:p-6 shadow-sm space-y-5">
+              {/* Header Bar */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-100 gap-2">
-                <div className="flex flex-col gap-1.5">
-                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold w-fit">
-                    Artikel Siap Rilis | {compareTarget.version} | {compareTarget.wordCount} kata
-                  </span>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-semibold">
-                      AI: {compareTarget.aiDetection}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-semibold">
-                      Kemiripan: {compareTarget.similarityScore}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-semibold">
-                      Buku Gaya: {compareTarget.styleGuideScore}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
-                      SEO: {compareTarget.seoAiScore}
-                    </span>
-                  </div>
-                </div>
+                <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1866EF] text-xs font-bold w-fit inline-flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Simulasi Rekomendasi AI</span>
+                </span>
+
                 <button
                   type="button"
                   onClick={() => {
-                    navigator.clipboard.writeText(
-                      compareTarget.lead +
-                        '\n\n' +
-                        compareTarget.sections.map((s) => (s.heading ? s.heading + '\n' : '') + s.content).join('\n\n')
-                    );
-                    showToast(`Naskah ${compareTarget.version} berhasil disalin ke clipboard`, 'success');
+                    const fullAiText =
+                      'Satelit Nusantara Tiga Resmi Mengorbit di Biak, Siap Akselerasi Internet 5G Wilayah 3T\n\n' +
+                      'BIAK, PAPUA — Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit dengan sukses pada Kamis dini hari dari kompleks peluncuran antariksa terpadu Biak Numfor, Papua. Misi strategis nasional ini menandai tonggak akselerasi konektivitas digital pita lebar secara merata di Indonesia Timur.\n\n' +
+                      'Peluncuran memanfaatkan kendaraan roket pendorong generasi modern yang dirancang secara mandiri guna menempatkan muatan komunikasi berkecepatan tinggi di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer di atas permukaan laut.\n\n' +
+                      'Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak 12 menit pasca lepas landas. Dalam taklimat resminya, Kepala Badan Riset dan Inovasi Nasional (BRIN) mengonfirmasi seluruh subsistem satelit berfungsi prima dalam lintasan orbit nominal.\n\n' +
+                      'Keberhasilan misi ini ditargetkan memperluas konektivitas internet 5G untuk ribuan fasilitas publik, puskesmas terluar, pos perbatasan negara, dan sekolah di kawasan Terdepan, Terluar, dan Tertinggal (3T) di penjuru Indonesia Timur.';
+                    navigator.clipboard.writeText(fullAiText);
+                    showToast('Naskah rekomendasi AI berhasil disalin ke clipboard', 'success');
                   }}
                   className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 self-start"
                 >
@@ -508,172 +497,221 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                 </button>
               </div>
 
+              {/* Meta: Dibuat pada tanggal */}
               <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
                 <span>
-                  Pembuat: <strong className="text-slate-800">{compareTarget.createdBy}</strong>
+                  Pembuat: <strong className="text-slate-800">AI Editorial Engine (RRI Assistant)</strong>
                 </span>
-                <span>Waktu: {compareTarget.createdAt}</span>
+                <span>
+                  Dibuat pada tanggal: <strong className="text-slate-800">{aiSimulatedDate} WIB</strong>
+                </span>
               </div>
 
-              <div className="space-y-1">
+              {/* Judul Naskah AI */}
+              <div className="space-y-2">
                 <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  Judul Naskah
+                  Judul Naskah (Optimasi AI)
                 </div>
                 <h2 className="text-base font-bold text-slate-900 leading-snug">
-                  {compareTarget.title}
+                  Satelit Nusantara Tiga Resmi Mengorbit di Biak, Siap Akselerasi Internet 5G Wilayah 3T
                 </h2>
+                {/* Note Rekomendasi Judul */}
+                <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs space-y-1">
+                  <span className="font-bold text-purple-900 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-purple-600 inline-block" />
+                    Catatan Rekomendasi SEO Title Tag:
+                  </span>
+                  <p className="text-purple-800 text-[11px] leading-relaxed">
+                    Judul dipadatkan menjadi 72 karakter dengan menempatkan kata kunci utama "Satelit Nusantara Tiga" dan entitas "Biak", terbukti meningkatkan CTR serta peluang muncul pada cuplikan Google SERP.
+                  </p>
+                </div>
               </div>
 
+              {/* Lead Paragraf AI */}
+              <div className="space-y-2">
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  Lead Paragraf (5W + 1H & AI-Search)
+                </div>
+                <p className="p-3.5 bg-blue-50/40 border border-blue-100 rounded-lg text-xs sm:text-sm text-slate-900 leading-relaxed text-justify">
+                  <strong className="text-slate-900 font-semibold">BIAK, PAPUA</strong> — Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit dengan sukses pada Kamis dini hari dari kompleks peluncuran antariksa terpadu Biak Numfor, Papua. Misi strategis nasional ini menandai tonggak akselerasi konektivitas digital pita lebar secara merata di Indonesia Timur.
+                </p>
+                {/* Note Rekomendasi Lead */}
+                <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-xs space-y-1">
+                  <span className="font-bold text-indigo-900 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-indigo-600 inline-block" />
+                    Catatan Rekomendasi AI-Search & Answer Engine:
+                  </span>
+                  <p className="text-indigo-800 text-[11px] leading-relaxed">
+                    Struktur kalimat pembuka disempurnakan dengan formula 5W+1H lugas dan penambahan konteks dampak misi pada 50 kata pertama agar mudah diekstraksi mesin pencari berbasis AI (Perplexity, SearchGPT).
+                  </p>
+                </div>
+              </div>
+
+              {/* Batang Tubuh Naskah AI dengan Note Rekomendasi di Bawah Tiap Text */}
+              <div className="space-y-4">
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  Batang Tubuh Naskah & Catatan Rekomendasi AI
+                </div>
+
+                {/* Paragraf 1 Batang Tubuh */}
+                <div className="p-4 bg-white border border-blue-100 rounded-xl space-y-3 shadow-2xs">
+                  <h3 className="text-xs sm:text-sm font-bold text-[#1866EF]">
+                    Spesifikasi Roket Pendorong & Ketinggian Orbit Geostasioner
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-900 leading-relaxed text-justify">
+                    Peluncuran memanfaatkan kendaraan roket pendorong generasi modern yang dirancang secara mandiri guna menempatkan muatan komunikasi berkecepatan tinggi di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer di atas permukaan laut.
+                  </p>
+                  {/* Note Kemiripan */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-emerald-900 flex items-center gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          Catatan Rekomendasi Kemiripan (Plagiarisme)
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white">
+                          Telah Disimulasikan
+                        </span>
+                      </div>
+                      <p className="text-emerald-800 text-[11px] leading-relaxed">
+                        Teks kutipan telah diparafrase dari siaran rilis kompas.com/antaranews.com untuk mencegah duplikasi konten dan menaikkan skor orisinalitas naskah.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Paragraf 2 Batang Tubuh */}
+                <div className="p-4 bg-white border border-blue-100 rounded-xl space-y-3 shadow-2xs">
+                  <h3 className="text-xs sm:text-sm font-bold text-[#1866EF]">
+                    Taklimat Resmi Kepala BRIN & Kesiapan Telemetri
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-900 leading-relaxed text-justify">
+                    Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak 12 menit pasca lepas landas. Dalam taklimat resminya, Kepala Badan Riset dan Inovasi Nasional (BRIN) mengonfirmasi seluruh subsistem satelit berfungsi prima dalam lintasan orbit nominal.
+                  </p>
+                  {/* Note Buku Gaya */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-amber-900 flex items-center gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-amber-600" />
+                          Catatan Rekomendasi Buku Gaya Redaksional RRI
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600 text-white">
+                          Telah Disimulasikan
+                        </span>
+                      </div>
+                      <p className="text-amber-800 text-[11px] leading-relaxed">
+                        Frasa 'kepala badan riset' disesuaikan menjadi 'Kepala Badan Riset dan Inovasi Nasional (BRIN)' sesuai kaidah Buku Gaya Redaksi RRI Bab IV Pasal 4 mengenai singkatan resmi lembaga negara.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Paragraf 3 Batang Tubuh */}
+                <div className="p-4 bg-white border border-blue-100 rounded-xl space-y-3 shadow-2xs">
+                  <h3 className="text-xs sm:text-sm font-bold text-[#1866EF]">
+                    Pemerataan Internet 5G untuk Fasilitas Publik Kawasan 3T
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-900 leading-relaxed text-justify">
+                    Keberhasilan misi ini ditargetkan memperluas konektivitas internet 5G untuk ribuan fasilitas publik, puskesmas terluar, pos perbatasan negara, dan sekolah di kawasan Terdepan, Terluar, dan Tertinggal (3T) di penjuru Indonesia Timur.
+                  </p>
+                  {/* Note Deteksi AI */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-blue-900 flex items-center gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-blue-600" />
+                          Catatan Rekomendasi Deteksi AI & Struktur Jurnalistik
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white">
+                          Telah Disimulasikan
+                        </span>
+                      </div>
+                      <p className="text-blue-800 text-[11px] leading-relaxed">
+                        Penataan susunan kalimat aktif dengan gaya bahasa jurnalistik mengalir dan penguraian akronim 3T secara terstruktur untuk menekan indikasi deteksi AI di bawah 15%.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* COLUMN 2: ARTIKEL YANG SUDAH DIPUBLISH DI PORTAL NEWS RRI (RIGHT) */}
+            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
+              {/* Header Bar */}
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 gap-2">
+                <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold w-fit inline-flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Portal News RRI (Live)</span>
+                </span>
+
+                <a
+                  href="https://rri.co.id/teknologi"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 self-start"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Buka di Portal RRI</span>
+                </a>
+              </div>
+
+              {/* Meta: Diterbitkan */}
+              <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
+                <span>
+                  Kanal: <strong className="text-slate-800">Portal Berita RRI Digital (Live CMS)</strong>
+                </span>
+                <span>
+                  Diterbitkan: <strong className="text-slate-800">{liveArticleDate} WIB</strong>
+                </span>
+              </div>
+
+              {/* Judul Naskah Live */}
+              <div className="space-y-2">
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  Judul Naskah Terbit
+                </div>
+                <h2 className="text-base font-bold text-slate-900 leading-snug">
+                  {selectedHistory.draftTitle || 'Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit'}
+                </h2>
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-500">
+                  Judul orisinil naskah saat ini yang ditayangkan pada halaman publik portal berita RRI.
+                </div>
+              </div>
+
+              {/* Lead Paragraf Live */}
               <div className="space-y-2">
                 <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                   Lead Paragraf
                 </div>
                 <p className="p-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-800 leading-relaxed text-justify">
-                  {compareTarget.lead}
+                  <strong className="text-slate-900 font-semibold">BIAK, PAPUA</strong> — Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit dengan sukses pada Kamis dini hari dari kompleks peluncuran antariksa terpadu Biak Numfor, Papua.
                 </p>
               </div>
 
+              {/* Batang Tubuh Paragraf Live */}
               <div className="space-y-4">
                 <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  Batang Tubuh Naskah & Catatan Temuan
+                  Batang Tubuh Naskah Terbit di Portal
                 </div>
 
-                {compareTarget.sections.map((sec, i) => (
-                  <div key={i} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                    {sec.heading && (
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        {sec.heading}
-                      </h3>
-                    )}
-
-                    <p className="text-xs sm:text-sm text-slate-800 leading-relaxed text-justify">
-                      {sec.content}
-                    </p>
-
-                    {sec.findingNote && (
-                      <div className="pt-2 border-t border-slate-200/70">
-                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-amber-900 flex items-center gap-1.5">
-                              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
-                              {sec.findingNote.title}
-                            </span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-white border border-amber-300 text-amber-800">
-                              {sec.findingNote.status}
-                            </span>
-                          </div>
-                          <p className="text-amber-800 text-[11px] leading-relaxed">
-                            {sec.findingNote.description}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Column 2: Versi Utama Aktif */}
-            <div className="bg-white border-2 border-blue-200 rounded-xl p-5 sm:p-6 shadow-sm space-y-5">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 gap-2">
-                <div className="flex flex-col gap-1.5">
-                  <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1866EF] text-xs font-semibold w-fit">
-                    Artikel Siap Rilis | {latest.version} (Versi Utama) | {latest.wordCount} kata
-                  </span>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-semibold">
-                      AI: {latest.aiDetection}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-semibold">
-                      Kemiripan: {latest.similarityScore}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-semibold">
-                      Buku Gaya: {latest.styleGuideScore}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
-                      SEO: {latest.seoAiScore}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      latest.lead +
-                        '\n\n' +
-                        latest.sections.map((s) => (s.heading ? s.heading + '\n' : '') + s.content).join('\n\n')
-                    );
-                    showToast(`Naskah ${latest.version} berhasil disalin ke clipboard`, 'success');
-                  }}
-                  className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 self-start"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Salin Naskah</span>
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
-                <span>
-                  Pembuat: <strong className="text-slate-800">{latest.createdBy}</strong>
-                </span>
-                <span>Waktu: {latest.createdAt}</span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  Judul Naskah
-                </div>
-                <h2 className="text-base font-bold text-slate-900 leading-snug">
-                  {latest.title}
-                </h2>
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  Lead Paragraf
-                </div>
-                <p className="p-3.5 bg-blue-50/40 border border-blue-100 rounded-lg text-xs sm:text-sm text-slate-900 leading-relaxed text-justify">
-                  {latest.lead}
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  Batang Tubuh Naskah & Catatan Perbaikan Editor
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                  <p className="text-xs sm:text-sm text-slate-800 leading-relaxed text-justify">
+                    Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer di atas permukaan laut.
+                  </p>
                 </div>
 
-                {latest.sections.map((sec, i) => (
-                  <div key={i} className="p-4 bg-white border border-blue-100 rounded-xl space-y-3 shadow-2xs">
-                    {sec.heading && (
-                      <h3 className="text-xs sm:text-sm font-bold text-[#1866EF]">
-                        {sec.heading}
-                      </h3>
-                    )}
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                  <p className="text-xs sm:text-sm text-slate-800 leading-relaxed text-justify">
+                    Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak hanya 12 menit pasca lepas landas. Dalam keterangan pers tertulisnya, "...menurut kepala badan riset saat meninjau langsung kesiapan pusat kendali peluncuran satelit di pulau terluar tersebut."
+                  </p>
+                </div>
 
-                    <p className="text-xs sm:text-sm text-slate-900 leading-relaxed text-justify">
-                      {sec.content}
-                    </p>
-
-                    {sec.findingNote && (
-                      <div className="pt-2 border-t border-slate-100">
-                        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-emerald-900 flex items-center gap-1.5">
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
-                              {sec.findingNote.title}
-                            </span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white">
-                              {sec.findingNote.status}
-                            </span>
-                          </div>
-                          <p className="text-emerald-800 text-[11px] leading-relaxed">
-                            {sec.findingNote.description}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                  <p className="text-xs sm:text-sm text-slate-800 leading-relaxed text-justify">
+                    Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk seluruh fasilitas publik, puskesmas, dan sekolah di kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -1402,16 +1440,18 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
               </select>
             </div>
 
-            {/* Filter 3: Status Pemeriksaan */}
+            {/* Filter 3: Status Artikel */}
             <div className="flex-1 min-w-[200px]">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="w-full px-3.5 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
-                <option value="">Status: Semua</option>
-                <option value="selesai">Selesai Diperiksa</option>
-                <option value="perlu-tindakan">Menunggu Tindakan</option>
+                <option value="">Status Artikel: Semua</option>
+                <option value="Draft">Draft</option>
+                <option value="Pending">Pending</option>
+                <option value="Publish">Publish</option>
+                <option value="Review">Review</option>
               </select>
             </div>
 
@@ -1433,11 +1473,11 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                 <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draf Berita</th>
                 <th className="py-3 px-4 font-semibold">Waktu Tinjau</th>
                 <th className="py-3 px-4 font-semibold">Ulasan</th>
+                <th className="py-3 px-4 font-semibold">Status Artikel</th>
                 <th className="py-3 px-4 font-semibold">Skor Kemiripan</th>
                 <th className="py-3 px-4 font-semibold">Buku Gaya</th>
                 <th className="py-3 px-4 font-semibold">Deteksi AI</th>
                 <th className="py-3 px-4 font-semibold">SEO & AI-Search</th>
-                <th className="py-3 px-4 font-semibold">Status Temuan</th>
                 <th className="py-3 px-4 text-center font-semibold">Aksi</th>
               </tr>
             </thead>
@@ -1467,6 +1507,23 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                       {item.triggerBy
                         ? item.triggerBy.replace(/^Pemicu:\s*/i, 'Ulasan: ').replace(/\s*[·•]\s*(Manual|AI|Otomatis)/gi, '')
                         : 'Ulasan: Editor'}
+                    </td>
+
+                    {/* Status Artikel */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          item.articleStatus === 'Publish'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : item.articleStatus === 'Pending'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : item.articleStatus === 'Review'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                            : 'bg-slate-100 text-slate-700 border border-slate-300'
+                        }`}
+                      >
+                        {item.articleStatus || 'Draft'}
+                      </span>
                     </td>
 
                     {/* Skor Kemiripan */}
@@ -1505,32 +1562,19 @@ export const RiwayatPemeriksaanPage: React.FC = () => {
                       </span>
                     </td>
 
-                    {/* Status Temuan */}
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                          {item.findingsCount} Total
-                        </span>
-                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          {item.fixedCount} Diperbaiki
-                        </span>
-                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-                          {item.ignoredCount} Diabaikan
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Aksi (Eye Icon to View Split Report) */}
+                    {/* Aksi (Button Compare) */}
                     <td className="py-4 px-4 text-center whitespace-nowrap">
                       <button
+                        type="button"
                         onClick={() => {
                           setSelectedHistory(item);
-                          setDetailViewMode('split');
+                          setDetailViewMode('compare');
                         }}
-                        className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-colors inline-flex items-center justify-center cursor-pointer shadow-2xs"
-                        title="Lihat Laporan Pemeriksaan"
+                        className="px-3 py-1.5 bg-[#EFF6FF] hover:bg-blue-100 border border-[#BFDBFE] text-[#1866EF] font-semibold text-xs rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
+                        title="Komparasi Rekomendasi AI vs Portal News RRI"
                       >
-                        <Eye className="w-4 h-4" />
+                        <GitCompare className="w-3.5 h-3.5" />
+                        <span>Compare</span>
                       </button>
                     </td>
                   </tr>

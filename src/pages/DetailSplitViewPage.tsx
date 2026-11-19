@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { FindingItem, FindingStatus } from '../types';
+import { FindingItem } from '../types';
 import {
   ArrowLeft,
   Sparkles,
   ExternalLink,
-  ChevronDown,
-  ChevronUp,
   Search,
   Bot,
+  Copy,
+  BookOpen,
+  CheckCircle2,
+  Sliders,
 } from 'lucide-react';
-import { IgnoreFindingReasonModal } from '../components/modals/IgnoreFindingReasonModal';
 import { BukuGayaTextModal } from '../components/modals/BukuGayaTextModal';
 
 export const DetailSplitViewPage: React.FC = () => {
@@ -20,51 +21,23 @@ export const DetailSplitViewPage: React.FC = () => {
     setActiveTab,
     selectedFindingId,
     setSelectedFindingId,
-    updateFindingStatus,
     runAiInspection,
     isAiAnalyzing,
     setCurrentPage,
     styleGuides,
   } = useApp();
 
-  // Accordion state: Set of finding IDs that are expanded (default EMPTY = ALL CLOSED)
-  const [expandedFindingIds, setExpandedFindingIds] = useState<Set<string>>(new Set());
-
   // Modals state
-  const [ignoringFinding, setIgnoringFinding] = useState<FindingItem | null>(null);
   const [isStyleGuideModalOpen, setIsStyleGuideModalOpen] = useState(false);
 
-  // Filters inside tab
-  const [statusFilter, setStatusFilter] = useState<string>('Semua');
-  const [severityFilter, setSeverityFilter] = useState<string>('Semua');
+  // Sub-filter for SEO vs AI-Search inside SEO tab
   const [seoSubFilter, setSeoSubFilter] = useState<'Semua' | 'SEO' | 'AI-Search'>('Semua');
 
   const activeStyleGuide = styleGuides.find((sg) => sg.isActive) || styleGuides[0];
 
-  const toggleAccordion = (id: string) => {
-    setExpandedFindingIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
-
-  const handleDecision = (finding: FindingItem, status: FindingStatus) => {
-    if (status === 'Diabaikan') {
-      setIgnoringFinding(finding);
-    } else {
-      updateFindingStatus(finding.id, status);
-    }
-  };
-
+  // Filter findings for the active tab
   const currentTabFindings = activeDraft.findings.filter((f) => {
     if (f.category !== activeTab) return false;
-    if (statusFilter !== 'Semua' && f.status !== statusFilter) return false;
-    if (severityFilter !== 'Semua' && f.severity !== severityFilter) return false;
     if (activeTab === 'seo') {
       if (seoSubFilter === 'SEO') {
         return f.code.startsWith('Temuan #SEO');
@@ -76,96 +49,40 @@ export const DetailSplitViewPage: React.FC = () => {
     return true;
   });
 
-  // Helper for dynamic card styling
-  const getCardHeaderTheme = (finding: FindingItem) => {
-    if (finding.status === 'Telah Diperbaiki' || finding.status === 'Diterima') {
-      return {
-        headerBg: 'bg-[#E2E8F0]',
-        bodyBg: 'bg-[#F8FAFC]',
-        border: 'border-[#E2E8F0]',
-        quoteBoxBg: 'bg-white',
-        quoteBoxBorder: 'border-slate-200',
-        quoteTextColor: 'text-slate-800',
-        deteksiAiBg: 'bg-white',
-        deteksiAiBorder: 'border-slate-200',
-        deteksiAiText: 'text-slate-800',
-        hasThreeButtons: false,
-      };
+  // Handle clicking a finding card -> select and smooth-scroll to relevant text in right column
+  const handleFindingClick = (finding: FindingItem) => {
+    setSelectedFindingId(finding.id);
+    const targetId = `art-p-${finding.paragraphIndex ?? 1}`;
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-
-    if (finding.severity === 'Tinggi') {
-      return {
-        headerBg: 'bg-[#FECACA]',
-        bodyBg: 'bg-[#FEF2F2]',
-        border: 'border-[#FECACA]',
-        quoteBoxBg: 'bg-[#FDF4FF]',
-        quoteBoxBorder: 'border-[#F5D0FE]',
-        quoteTextColor: 'text-[#A21CAF]',
-        deteksiAiBg: 'bg-[#F0FDFA]',
-        deteksiAiBorder: 'border-[#CCFBF1]',
-        deteksiAiText: 'text-[#0F766E]',
-        hasThreeButtons: true,
-      };
-    }
-
-    if (finding.severity === 'Rendah') {
-      return {
-        headerBg: 'bg-[#BFDBFE]',
-        bodyBg: 'bg-[#EFF6FF]',
-        border: 'border-[#BFDBFE]',
-        quoteBoxBg: 'bg-[#FDF4FF]',
-        quoteBoxBorder: 'border-[#F5D0FE]',
-        quoteTextColor: 'text-[#A21CAF]',
-        deteksiAiBg: 'bg-[#F0FDFA]',
-        deteksiAiBorder: 'border-[#CCFBF1]',
-        deteksiAiText: 'text-[#0F766E]',
-        hasThreeButtons: true,
-      };
-    }
-
-    // Default: Sedang
-    return {
-      headerBg: 'bg-[#FDE68A]',
-      bodyBg: 'bg-[#FFFBEB]',
-      border: 'border-[#FDE68A]',
-      quoteBoxBg: 'bg-[#FDF4FF]',
-      quoteBoxBorder: 'border-[#F5D0FE]',
-      quoteTextColor: 'text-[#A21CAF]',
-      deteksiAiBg: 'bg-[#F0FDFA]',
-      deteksiAiBorder: 'border-[#CCFBF1]',
-      deteksiAiText: 'text-[#0F766E]',
-      hasThreeButtons: true,
-    };
   };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-5 animate-fade-in">
-      {/* Back Button */}
-      <div className="flex items-center">
-        <button
-          onClick={() => setCurrentPage('daftar-draf')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors py-1 px-1 rounded-lg hover:bg-slate-100 cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Kembali ke Daftar Draf</span>
-        </button>
-      </div>
+      {/* Top Navigation & Action Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div className="space-y-1">
+          <button
+            onClick={() => setCurrentPage('daftar-draf')}
+            className="text-xs font-semibold text-slate-500 hover:text-slate-900 inline-flex items-center gap-1.5 cursor-pointer transition-colors py-1 px-1 -ml-1 rounded-md hover:bg-slate-100"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Kembali ke Daftar Draf Berita</span>
+          </button>
 
-      {/* Title & Metadata Top Card */}
-      <div className="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-        <div className="space-y-2 max-w-3xl">
-          <h1 className="text-xl font-bold text-blue-700 leading-snug">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-950 tracking-tight leading-snug">
             {activeDraft.title}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-            Editor: <span className="font-semibold text-slate-700">{activeDraft.journalist}</span>{' '}
-            • Waktu Ubah:{' '}
-            <span className="font-semibold text-slate-700">{activeDraft.updatedAt} WIB</span> •
-            Status Artikel:{' '}
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-              {activeDraft.cmsStatus}
-            </span>
-          </p>
+
+          <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap">
+            <span className="font-semibold text-slate-800">{activeDraft.artCode}</span>
+            <span>·</span>
+            <span>Editor: {activeDraft.journalist}</span>
+            <span>·</span>
+            <span>Terakhir diperbarui: {activeDraft.updatedAt}</span>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 shrink-0 flex-wrap">
@@ -216,444 +133,159 @@ export const DetailSplitViewPage: React.FC = () => {
         <div className="bg-purple-50/80 border border-purple-200 p-3 rounded-lg text-xs flex items-center justify-between">
           <span className="text-purple-800 font-medium">SEO & AI-Search:</span>
           <span className="font-bold text-purple-700">
-            {isAiAnalyzing ? 'Memeriksa ...' : '9 Usulan Optimasi'}
+            {isAiAnalyzing ? 'Memeriksa ...' : '9 Usulan'}
           </span>
         </div>
       </div>
 
-      {/* Main Split-View Layout */}
+      {/* TAB NAVIGATION: MEMBAWAHI ARTIKEL DI KANAN DAN TEMUAN DI KIRI */}
+      <div className="bg-white p-1.5 rounded-xl border border-slate-200 flex items-center gap-2 shadow-xs">
+        <button
+          onClick={() => {
+            setActiveTab('kemiripan');
+            setSelectedFindingId(null);
+          }}
+          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+            activeTab === 'kemiripan'
+              ? 'bg-[#1866EF] text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <Copy className="w-4 h-4 shrink-0" />
+          <span>Kemiripan</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'kemiripan'
+                ? 'bg-white/20 text-white'
+                : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+            }`}
+          >
+            {activeDraft.findings.filter((f) => f.category === 'kemiripan').length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('buku_gaya');
+            setSelectedFindingId(null);
+          }}
+          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+            activeTab === 'buku_gaya'
+              ? 'bg-[#1866EF] text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <BookOpen className="w-4 h-4 shrink-0" />
+          <span>Buku Gaya</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'buku_gaya'
+                ? 'bg-white/20 text-white'
+                : 'bg-amber-50 text-amber-700 border border-amber-200'
+            }`}
+          >
+            {activeDraft.findings.filter((f) => f.category === 'buku_gaya').length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('seo');
+            setSelectedFindingId(null);
+          }}
+          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+            activeTab === 'seo'
+              ? 'bg-[#1866EF] text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <Search className="w-4 h-4 shrink-0" />
+          <span>SEO & AI-Search</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'seo'
+                ? 'bg-white/20 text-white'
+                : 'bg-purple-50 text-purple-700 border border-purple-200'
+            }`}
+          >
+            {activeDraft.findings.filter((f) => f.category === 'seo').length}
+          </span>
+        </button>
+      </div>
+
+      {/* MAIN SPLIT-VIEW: KIRI = DAFTAR TEMUAN (5 COLS), KANAN = NASKAH ARTIKEL (7 COLS) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Naskah Berita Read-Only dari CMS (7 Cols) */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col overflow-hidden lg:h-[calc(100vh-210px)] lg:max-h-[calc(100vh-210px)] lg:min-h-[560px] lg:sticky lg:top-4">
-          {/* Card Header */}
-          <div className="shrink-0 p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-white z-10">
-            <div>
-              <h2 className="text-sm font-bold text-slate-900">
-                Naskah Berita (Read-Only dari CMS)
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                428 Kata · 3 Paragraf · 06 Nov 2026, 14:45
-              </p>
-            </div>
-
-            <a
-              href="https://antaranews.com"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium bg-[#F8FAFC] border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
-            >
-              <span>Lihat Sumber</span>
-              <ExternalLink className="w-3 h-3 text-slate-500" />
-            </a>
-          </div>
-
-          {/* Card Body */}
-          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4 text-sm text-slate-800 leading-relaxed font-sans">
-            <h3 className="text-lg font-semibold text-slate-950 leading-snug">
-              Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit
-            </h3>
-
-            {/* Paragraph 1 */}
-            <p className="text-slate-800 text-justify">
-              BIAK, PAPUA — Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil
-              mengorbit dengan sukses pada Kamis dini hari dari kompleks peluncuran antariksa terpadu
-              Biak Numfor, Papua.
-            </p>
-
-            {/* Highlight Box 1 (Fuchsia / Kemiripan 78%) */}
-            <div
-              onClick={() => {
-                setActiveTab('kemiripan');
-                setSelectedFindingId('f-kmp-1');
-                if (!expandedFindingIds.has('f-kmp-1')) {
-                  toggleAccordion('f-kmp-1');
-                }
-              }}
-              className="cursor-pointer group transition-transform active:scale-[0.99]"
-            >
-              <div className="bg-[#F5D0FE] px-3.5 py-1.5 rounded-t-lg border-t border-x border-[#F5D0FE]">
-                <span className="text-xs font-bold text-[#A21CAF]">
-                  Sorotan Kemiripan 78% (Cocok dengan antaranews.com)
-                </span>
-              </div>
-              <div className="bg-[#FDF4FF] border border-[#F5D0FE] p-3.5 rounded-b-lg">
-                <p className="text-sm text-[#A21CAF] leading-relaxed">
-                  "Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna
-                  menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada
-                  ketinggian 35.786 kilometer di atas permukaan laut."
-                </p>
-              </div>
-            </div>
-
-            {/* Highlight Box 2 (Teal / Kemiripan 78%) */}
-            <div
-              onClick={() => {
-                setActiveTab('kemiripan');
-                setSelectedFindingId('f-kmp-2');
-                if (!expandedFindingIds.has('f-kmp-2')) {
-                  toggleAccordion('f-kmp-2');
-                }
-              }}
-              className="cursor-pointer group transition-transform active:scale-[0.99]"
-            >
-              <div className="bg-[#99F6E4] px-3.5 py-1.5 rounded-t-lg border-t border-x border-[#99F6E4]">
-                <span className="text-xs font-bold text-[#0F766E]">
-                  Sorotan Kemiripan 78% (Cocok dengan antaranews.com)
-                </span>
-              </div>
-              <div className="bg-[#F0FDFA] border border-[#99F6E4] p-3.5 rounded-b-lg">
-                <p className="text-sm text-[#0F766E] leading-relaxed">
-                  Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak hanya 12 menit
-                  pasca lepas landas. Dalam keterangan pers tertulisnya,
-                </p>
-              </div>
-            </div>
-
-            {/* Highlight Box 3 (Purple / Kemiripan 78%) */}
-            <div
-              onClick={() => {
-                setActiveTab('kemiripan');
-                setSelectedFindingId('f-kmp-3');
-                if (!expandedFindingIds.has('f-kmp-3')) {
-                  toggleAccordion('f-kmp-3');
-                }
-              }}
-              className="cursor-pointer group transition-transform active:scale-[0.99]"
-            >
-              <div className="bg-[#E9D5FF] px-3.5 py-1.5 rounded-t-lg border-t border-x border-[#E9D5FF]">
-                <span className="text-xs font-bold text-[#7E22CE]">
-                  Sorotan Kemiripan 78% (Cocok dengan antaranews.com)
-                </span>
-              </div>
-              <div className="bg-[#FAF5FF] border border-[#E9D5FF] p-3.5 rounded-b-lg">
-                <p className="text-sm text-[#7E22CE] leading-relaxed">
-                  "...menurut kepala badan riset saat meninjau langsung kesiapan pusat kendali
-                  peluncuran satelit di pulau terluar tersebut."
-                </p>
-              </div>
-            </div>
-
-            {/* Final Paragraph */}
-            <p className="text-slate-800 text-justify">
-              Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk
-              seluruh fasilitas publik, puskesmas, dan sekolah di kawasan 3T (Terdepan, Terluar,
-              Tertinggal) di wilayah Indonesia Timur.
-            </p>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: AI Findings Tabs & Accordion Cards (5 Cols) */}
-        <div className="lg:col-span-5 flex flex-col lg:h-[calc(100vh-210px)] lg:max-h-[calc(100vh-210px)] lg:min-h-[560px] lg:sticky lg:top-4 space-y-3.5">
-          {/* Tab Navigation */}
-          <div className="shrink-0 bg-white p-1 rounded-xl border border-slate-200 flex items-center gap-1 shadow-2xs">
-            <button
-              onClick={() => setActiveTab('kemiripan')}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'kemiripan'
-                  ? 'bg-[#1866EF] text-[#F8FAFC] shadow-2xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              <span>Kemiripan</span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs font-normal ${
-                  activeTab === 'kemiripan'
-                    ? 'bg-[#FFFBEB] text-[#B45309]'
-                    : 'bg-[#F8FAFC] text-slate-700 border border-slate-200'
-                }`}
-              >
-                {activeDraft.findings.filter((f) => f.category === 'kemiripan').length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('buku_gaya')}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'buku_gaya'
-                  ? 'bg-[#1866EF] text-[#F8FAFC] shadow-2xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              <span>Buku Gaya</span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs font-normal ${
-                  activeTab === 'buku_gaya'
-                    ? 'bg-[#FFFBEB] text-[#B45309]'
-                    : 'bg-[#F8FAFC] text-slate-700 border border-slate-200'
-                }`}
-              >
-                {activeDraft.findings.filter((f) => f.category === 'buku_gaya').length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('seo')}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'seo'
-                  ? 'bg-[#1866EF] text-[#F8FAFC] shadow-2xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              <span>SEO & AI-Search</span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs font-normal ${
-                  activeTab === 'seo'
-                    ? 'bg-[#FFFBEB] text-[#B45309]'
-                    : 'bg-[#F8FAFC] text-slate-700 border border-slate-200'
-                }`}
-              >
-                {activeDraft.findings.filter((f) => f.category === 'seo').length}
-              </span>
-            </button>
-          </div>
-
-          {/* TAB 1: KEMIRIPAN CONTENT */}
+        {/* LEFT COLUMN: DAFTAR TEMUAN SESUAI TAB (5 Cols) */}
+        <div className="lg:col-span-5 flex flex-col lg:h-[calc(100vh-250px)] lg:max-h-[calc(100vh-250px)] lg:min-h-[560px] lg:sticky lg:top-4 space-y-3.5">
+          {/* TAB 1: KEMIRIPAN TEMUAN */}
           {activeTab === 'kemiripan' && (
             <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
               {/* Score Overview Card */}
               <div className="shrink-0 p-4 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-900">Skor Kemiripan:</span>
+                <span className="text-xs font-semibold text-slate-900">Skor Kemiripan Naskah:</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[22px] font-bold text-slate-900 leading-none">18.4%</span>
-                  <span className="bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] text-xs font-medium px-2.5 py-0.5 rounded-md">
-                    Rendah
+                  <span className="text-[20px] font-bold text-slate-900 leading-none">18.4%</span>
+                  <span className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-md">
+                    Rendah (Aman)
                   </span>
                 </div>
               </div>
 
-              {/* Filter Row */}
-              <div className="shrink-0 flex items-center justify-between gap-2">
-                <span className="text-xs font-semibold text-slate-900">
-                  {currentTabFindings.length} Daftar Temuan
+              {/* Subheader info */}
+              <div className="shrink-0 flex items-center justify-between text-xs text-slate-500">
+                <span className="font-bold text-slate-800">
+                  {currentTabFindings.length} Sumber Kemiripan Terdeteksi
                 </span>
-
-                <div className="flex items-center gap-2">
-                  {/* Status Temuan dropdown */}
-                  <div className="relative">
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      aria-label="Filter Status Temuan"
-                      className="appearance-none bg-white border border-slate-200 text-slate-900 text-xs rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-2xs"
-                    >
-                      <option value="Semua">Status Temuan: Semua</option>
-                      <option value="Belum Ditandai">Belum Ditandai</option>
-                      <option value="Diterima">Diterima</option>
-                      <option value="Diabaikan">Diabaikan</option>
-                      <option value="Telah Diperbaiki">Telah Diperbaiki</option>
-                    </select>
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  </div>
-
-                  {/* Tingkat Temuan dropdown */}
-                  <div className="relative">
-                    <select
-                      value={severityFilter}
-                      onChange={(e) => setSeverityFilter(e.target.value)}
-                      aria-label="Filter Tingkat Temuan"
-                      className="appearance-none bg-white border border-slate-200 text-slate-900 text-xs rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-2xs"
-                    >
-                      <option value="Semua">Tingkat Temuan: Semua</option>
-                      <option value="Tinggi">Tinggi</option>
-                      <option value="Sedang">Sedang</option>
-                      <option value="Rendah">Rendah</option>
-                    </select>
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  </div>
-                </div>
+                <span className="text-[11px] text-slate-400">Klik temuan untuk sorot teks</span>
               </div>
 
-              {/* Finding Cards Accordion (Default Collapsed) */}
+              {/* Finding Cards List */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
                 {currentTabFindings.map((finding) => {
-                  const theme = getCardHeaderTheme(finding);
-                  const isExpanded = expandedFindingIds.has(finding.id);
+                  const isSelected = selectedFindingId === finding.id;
+                  const sourceDomain = finding.matchedSource || 'kompas.com';
 
                   return (
                     <div
                       key={finding.id}
-                      className={`rounded-xl border transition-all overflow-hidden ${theme.border} shadow-2xs`}
+                      onClick={() => handleFindingClick(finding)}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer shadow-2xs ${
+                        isSelected
+                          ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/40'
+                          : 'border-slate-200 bg-white hover:border-emerald-300 hover:shadow-xs'
+                      }`}
                     >
-                      {/* Accordion Header Strip (Always visible) */}
-                      <div
-                        onClick={() => {
-                          setSelectedFindingId(finding.id);
-                          toggleAccordion(finding.id);
-                        }}
-                        className={`${theme.headerBg} px-4 py-3 flex items-center justify-between cursor-pointer select-none transition-colors hover:brightness-98`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <span className="p-0.5 rounded text-slate-700">
-                            {isExpanded ? (
-                              <ChevronUp className="w-4 h-4" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4" />
-                            )}
-                          </span>
+                      {/* Header with Direct External Link & Similarity % */}
+                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                        <a
+                          href={`https://${sourceDomain}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline"
+                          title={`Buka situs rujukan ${sourceDomain}`}
+                        >
+                          <span>Mirip dengan {sourceDomain}</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
 
-                          <span className="text-xs font-bold text-slate-900">
-                            Tingkat: {finding.severity}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          {/* Badge Status */}
-                          <span
-                            className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
-                              finding.status === 'Telah Diperbaiki' || finding.status === 'Diterima'
-                                ? 'bg-[#334155] text-white'
-                                : finding.status === 'Diabaikan'
-                                ? 'bg-slate-200 text-slate-700'
-                                : 'bg-[#F8FAFC] border border-slate-300 text-slate-700'
-                            }`}
-                          >
-                            {finding.status === 'Belum Ditandai' ? 'Sudah Ditandai' : finding.status}
-                          </span>
-
-                          {/* Lihat Sumber Pill */}
-                          <a
-                            href="https://antaranews.com"
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-[#F8FAFC] border border-slate-200 text-slate-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-100 transition-colors shrink-0"
-                            title="Buka rujukan sumber artikel"
-                          >
-                            <span>Lihat Sumber</span>
-                            <ExternalLink className="w-3 h-3 text-slate-500" />
-                          </a>
-                        </div>
+                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800">
+                          {finding.similarityPercent || 78}% Mirip
+                        </span>
                       </div>
 
-                      {/* Accordion Expanded Body */}
-                      {isExpanded && (
-                        <div className={`${theme.bodyBg} p-4 space-y-3 border-t ${theme.border} animate-fade-in`}>
-                          {/* Sub-box 1: Deteksi AI */}
-                          <div
-                            className={`${theme.deteksiAiBg} border ${theme.deteksiAiBorder} p-3 rounded-md`}
-                          >
-                            <p className={`text-xs font-bold ${theme.deteksiAiText} mb-0.5`}>
-                              Deteksi AI
-                            </p>
-                            <p className={`text-xs ${theme.deteksiAiText}`}>
-                              {finding.aiIndication || 'Indikasi AI: 12% (Aman)'}
-                            </p>
-                          </div>
+                      {/* Alasan & Rekomendasi AI */}
+                      <div className="mt-2.5 text-xs text-slate-700 leading-relaxed bg-slate-50/80 p-3 rounded-lg border border-slate-100">
+                        <span className="font-semibold text-slate-900 block mb-0.5">
+                          Alasan & Rekomendasi AI:
+                        </span>
+                        {finding.recommendation}
+                      </div>
 
-                          {/* Sub-box 2: KUTIPAN TEKS COCOK */}
-                          <div
-                            className={`${theme.quoteBoxBg} border ${theme.quoteBoxBorder} p-3 rounded-md`}
-                          >
-                            <p
-                              className={`text-xs font-bold ${theme.quoteTextColor} mb-1 uppercase tracking-wide`}
-                            >
-                              KUTIPAN TEKS COCOK (42 KATA SAMA PERSIS):
-                            </p>
-                            <p className={`text-xs ${theme.quoteTextColor} leading-relaxed`}>
-                              "{finding.matchedSnippet}"
-                            </p>
-                          </div>
-
-                          {/* Sub-box 3: Alasan & Rekomendasi AI */}
-                          <div className="bg-white border border-slate-200 p-3 rounded-md shadow-2xs">
-                            <p className="text-xs font-bold text-slate-900 mb-1">
-                              Alasan & Rekomendasi AI:
-                            </p>
-                            <p className="text-xs text-slate-700 leading-relaxed">
-                              {finding.recommendation}
-                            </p>
-                          </div>
-
-                          {finding.decisionNote && (
-                            <div className="text-[11px] text-blue-700 bg-blue-50/60 p-2 rounded border border-blue-100">
-                              {finding.decisionNote}
-                            </div>
-                          )}
-
-                          {/* Action Buttons */}
-                          <div className="pt-1">
-                            <p className="text-[11px] font-semibold text-slate-700 mb-2">
-                              Tindak Lanjut Keputusan Editor:
-                            </p>
-
-                            {theme.hasThreeButtons ? (
-                              <div className="grid grid-cols-3 gap-2">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecision(finding, 'Diterima');
-                                  }}
-                                  className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                                    finding.status === 'Diterima'
-                                      ? 'bg-emerald-600 text-white shadow-2xs'
-                                      : 'bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] hover:bg-emerald-100'
-                                  }`}
-                                >
-                                  Diterima
-                                </button>
-
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecision(finding, 'Diabaikan');
-                                  }}
-                                  className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                                    finding.status === 'Diabaikan'
-                                      ? 'bg-slate-700 text-white shadow-2xs'
-                                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
-                                  }`}
-                                >
-                                  Diabaikan
-                                </button>
-
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecision(finding, 'Telah Diperbaiki');
-                                  }}
-                                  className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                                    finding.status === 'Telah Diperbaiki'
-                                      ? 'bg-[#1866EF] text-white shadow-xs'
-                                      : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50'
-                                  }`}
-                                >
-                                  Telah Diperbaiki
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="grid grid-cols-2 gap-2">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecision(finding, 'Diterima');
-                                  }}
-                                  className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                                    finding.status === 'Diterima'
-                                      ? 'bg-emerald-600 text-white shadow-2xs'
-                                      : 'bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] hover:bg-emerald-100'
-                                  }`}
-                                >
-                                  Diterima
-                                </button>
-
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecision(finding, 'Diabaikan');
-                                  }}
-                                  className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                                    finding.status === 'Diabaikan'
-                                      ? 'bg-slate-700 text-white shadow-2xs'
-                                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
-                                  }`}
-                                >
-                                  Diabaikan
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                        <span>Lokasi: Paragraf {finding.paragraphIndex || 2}</span>
+                        <span className="text-blue-600 font-semibold">Lihat ke naskah →</span>
+                      </div>
                     </div>
                   );
                 })}
@@ -661,9 +293,10 @@ export const DetailSplitViewPage: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 2: BUKU GAYA CONTENT */}
+          {/* TAB 2: BUKU GAYA TEMUAN */}
           {activeTab === 'buku_gaya' && (
             <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
+              {/* Active Guide Card */}
               <div className="shrink-0 p-4 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
                 <div>
                   <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -674,6 +307,7 @@ export const DetailSplitViewPage: React.FC = () => {
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsStyleGuideModalOpen(true)}
                   className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors shrink-0 cursor-pointer"
                 >
@@ -681,147 +315,54 @@ export const DetailSplitViewPage: React.FC = () => {
                 </button>
               </div>
 
+              {/* Subheader info */}
               <div className="shrink-0 flex items-center justify-between text-xs text-slate-500">
-                <span className="font-semibold text-slate-800">
-                  {currentTabFindings.length} Daftar Temuan Buku Gaya
+                <span className="font-bold text-slate-800">
+                  {currentTabFindings.length} Temuan Kaidah Redaksional
                 </span>
-                <span className="text-[11px] text-slate-400">Pemeriksaan EYD & Gaya RRI</span>
+                <span className="text-[11px] text-slate-400">Klik temuan untuk sorot teks</span>
               </div>
 
-              {/* Finding Cards Accordion (Default Collapsed) */}
+              {/* Finding Cards List */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
                 {currentTabFindings.map((finding) => {
-                  const isExpanded = expandedFindingIds.has(finding.id);
+                  const isSelected = selectedFindingId === finding.id;
 
                   return (
                     <div
                       key={finding.id}
-                      className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden transition-all"
+                      onClick={() => handleFindingClick(finding)}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer shadow-2xs ${
+                        isSelected
+                          ? 'border-amber-500 ring-2 ring-amber-500/20 bg-amber-50/40'
+                          : 'border-slate-200 bg-white hover:border-amber-300 hover:shadow-xs'
+                      }`}
                     >
-                      {/* Accordion Header */}
-                      <div
-                        onClick={() => {
-                          setSelectedFindingId(finding.id);
-                          toggleAccordion(finding.id);
-                        }}
-                        className="bg-amber-50/80 px-4 py-3 flex items-center justify-between cursor-pointer select-none transition-colors hover:bg-amber-100/70 border-b border-amber-200/60"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <span className="p-0.5 rounded text-slate-700">
-                            {isExpanded ? (
-                              <ChevronUp className="w-4 h-4 text-amber-900" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4 text-amber-900" />
-                            )}
+                      {/* Peraturan yang Dilanggar */}
+                      <div className="flex items-start gap-2 pb-2 border-b border-slate-100">
+                        <BookOpen className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-[11px] font-semibold text-amber-800 uppercase tracking-wider block">
+                            Buku Gaya yang Dilanggar:
                           </span>
-
-                          <span className="text-xs font-bold text-amber-950">
-                            Tingkat: {finding.severity}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-amber-200 text-amber-800">
-                            {finding.status}
-                          </span>
-
-                          <a
-                            href="https://rri.co.id/bukugaya"
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setIsStyleGuideModalOpen(true);
-                            }}
-                            className="bg-white border border-slate-200 text-slate-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-100 transition-colors shrink-0"
-                            title="Buka rujukan Buku Gaya Redaksi"
-                          >
-                            <span>Lihat Sumber</span>
-                            <ExternalLink className="w-3 h-3 text-slate-500" />
-                          </a>
+                          <h4 className="text-xs font-bold text-slate-900 mt-0.5">
+                            {finding.ruleViolated || 'Bab II Pasal 4 - Nomenklatur Lembaga & Singkatan Resmi'}
+                          </h4>
                         </div>
                       </div>
 
-                      {/* Accordion Body */}
-                      {isExpanded && (
-                        <div className="p-4 space-y-3.5 bg-white animate-fade-in">
-                          <div>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                              KUTIPAN TEKS DRAF:
-                            </p>
-                            <p className="text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200 font-mono text-slate-800">
-                              "{finding.matchedSnippet}"
-                            </p>
-                          </div>
+                      {/* Alasan & Rekomendasi AI */}
+                      <div className="mt-2.5 text-xs text-slate-700 leading-relaxed bg-amber-50/50 p-3 rounded-lg border border-amber-100">
+                        <span className="font-semibold text-amber-950 block mb-0.5">
+                          Alasan & Rekomendasi AI:
+                        </span>
+                        {finding.recommendation}
+                      </div>
 
-                          <div>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                              Buku Gaya yang Dilanggar:
-                            </p>
-                            <p className="text-xs font-semibold text-red-600">
-                              {finding.ruleViolated || 'Penulisan Nomenklatur Lembaga & Singkatan Resmi'}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                              Alasan & Rekomendasi AI:
-                            </p>
-                            <p className="text-xs text-slate-700 leading-relaxed">
-                              {finding.recommendation}
-                            </p>
-                          </div>
-
-                          <div className="pt-2 border-t border-slate-100">
-                            <p className="text-[11px] font-semibold text-slate-600 mb-2">
-                              Tindak Lanjut Keputusan Editor:
-                            </p>
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDecision(finding, 'Diterima');
-                                }}
-                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                                  finding.status === 'Diterima'
-                                    ? 'bg-emerald-600 text-white shadow-2xs'
-                                    : 'bg-white border border-emerald-300 text-emerald-700 hover:bg-emerald-50'
-                                }`}
-                              >
-                                Diterima
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDecision(finding, 'Diabaikan');
-                                }}
-                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                                  finding.status === 'Diabaikan'
-                                    ? 'bg-slate-700 text-white shadow-2xs'
-                                    : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                                }`}
-                              >
-                                Diabaikan
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDecision(finding, 'Telah Diperbaiki');
-                                }}
-                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                                  finding.status === 'Telah Diperbaiki'
-                                    ? 'bg-blue-600 text-white shadow-2xs'
-                                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50'
-                                }`}
-                              >
-                                Telah Diperbaiki
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                        <span>Lokasi: Paragraf {finding.paragraphIndex || 3}</span>
+                        <span className="text-amber-700 font-semibold">Lihat ke naskah →</span>
+                      </div>
                     </div>
                   );
                 })}
@@ -829,7 +370,7 @@ export const DetailSplitViewPage: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 3: SEO & AI-SEARCH CONTENT */}
+          {/* TAB 3: SEO & AI-SEARCH TEMUAN */}
           {activeTab === 'seo' && (
             <div className="flex-1 flex flex-col min-h-0 space-y-3.5 animate-fade-in">
               {/* Sub-filter pills for SEO vs AI-Search */}
@@ -879,142 +420,66 @@ export const DetailSplitViewPage: React.FC = () => {
                 </span>
               </div>
 
-              {/* Finding Cards Accordion (Default Collapsed) */}
+              {/* Finding Cards List */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0">
                 {currentTabFindings.map((finding) => {
-                  const isExpanded = expandedFindingIds.has(finding.id);
+                  const isSelected = selectedFindingId === finding.id;
                   const isAiSearch = finding.code.startsWith('Temuan #AIS');
 
                   return (
                     <div
                       key={finding.id}
-                      className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden transition-all"
+                      onClick={() => handleFindingClick(finding)}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer shadow-2xs ${
+                        isSelected
+                          ? isAiSearch
+                            ? 'border-purple-500 ring-2 ring-purple-500/20 bg-purple-50/40'
+                            : 'border-blue-500 ring-2 ring-blue-500/20 bg-blue-50/40'
+                          : 'border-slate-200 bg-white hover:border-purple-300 hover:shadow-xs'
+                      }`}
                     >
-                      {/* Accordion Header */}
-                      <div
-                        onClick={() => {
-                          setSelectedFindingId(finding.id);
-                          toggleAccordion(finding.id);
-                        }}
-                        className={`px-4 py-3 flex items-center justify-between cursor-pointer select-none transition-colors border-b ${
-                          isAiSearch
-                            ? 'bg-purple-50/80 hover:bg-purple-100/70 border-purple-200/60'
-                            : 'bg-blue-50/80 hover:bg-blue-100/70 border-blue-200/60'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
-                          <span className="p-0.5 rounded text-slate-700 shrink-0">
-                            {isExpanded ? (
-                              <ChevronUp className="w-4 h-4 text-slate-900" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4 text-slate-900" />
-                            )}
-                          </span>
-
-                          <div className="flex flex-col min-w-0">
-                            <span
-                              className={`text-xs font-bold leading-tight ${
-                                isAiSearch ? 'text-purple-950' : 'text-blue-950'
-                              }`}
-                            >
-                              Tingkat: {finding.severity}
-                            </span>
-                            <span className="text-xs text-slate-500 font-normal leading-tight mt-0.5 truncate">
-                              {finding.title}
-                            </span>
-                          </div>
+                      {/* Judul Usulan (SEO Title Tag / Headline) */}
+                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={`w-2 h-2 rounded-full ${
+                              isAiSearch ? 'bg-purple-600' : 'bg-blue-600'
+                            }`}
+                          />
+                          <h4 className="text-xs font-bold text-slate-900">
+                            {finding.title || 'Usulan Judul (SEO Title Tag)'}
+                          </h4>
                         </div>
 
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
-                            {finding.status}
-                          </span>
-
-                          <a
-                            href="https://developers.google.com/search/docs"
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-white border border-slate-200 text-slate-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-100 transition-colors shrink-0"
-                            title="Buka panduan rujukan SEO & AI-Search"
-                          >
-                            <span>Lihat Sumber</span>
-                            <ExternalLink className="w-3 h-3 text-slate-500" />
-                          </a>
-                        </div>
+                        <span
+                          className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
+                            isAiSearch
+                              ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                              : 'bg-blue-50 text-blue-700 border border-blue-200'
+                          }`}
+                        >
+                          {isAiSearch ? 'AI-Search' : 'SEO'}
+                        </span>
                       </div>
 
-                      {/* Accordion Body */}
-                      {isExpanded && (
-                        <div className="p-4 space-y-3.5 bg-white animate-fade-in">
-                          <div>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                              Bagian Target / Kutipan Naskah:
-                            </p>
-                            <p className="text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200 font-mono text-slate-800">
-                              "{finding.matchedSnippet}"
-                            </p>
-                          </div>
+                      {/* Rekomendasi Optimasi */}
+                      <div className="mt-2.5 text-xs text-slate-700 leading-relaxed bg-slate-50/80 p-3 rounded-lg border border-slate-100">
+                        <span className="font-semibold text-slate-900 block mb-0.5">
+                          Rekomendasi Optimasi {isAiSearch ? 'AI-Search' : 'SEO'}:
+                        </span>
+                        {finding.recommendation}
+                      </div>
 
-                          <div>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                              Rekomendasi Optimasi {isAiSearch ? 'AI-Search' : 'SEO'}:
-                            </p>
-                            <p className="text-xs text-slate-800 leading-relaxed font-medium bg-slate-50/70 p-3 rounded-lg border border-slate-100">
-                              {finding.recommendation}
-                            </p>
-                          </div>
-
-                          <div className="pt-2 border-t border-slate-100">
-                            <p className="text-[11px] font-semibold text-slate-600 mb-2">
-                              Tindak Lanjut Keputusan Editor:
-                            </p>
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDecision(finding, 'Diterima');
-                                }}
-                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                                  finding.status === 'Diterima'
-                                    ? 'bg-emerald-600 text-white shadow-2xs'
-                                    : 'bg-white border border-emerald-300 text-emerald-700 hover:bg-emerald-50'
-                                }`}
-                              >
-                                Diterima
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDecision(finding, 'Diabaikan');
-                                }}
-                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                                  finding.status === 'Diabaikan'
-                                    ? 'bg-slate-700 text-white shadow-2xs'
-                                    : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                                }`}
-                              >
-                                Diabaikan
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDecision(finding, 'Telah Diperbaiki');
-                                }}
-                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                                  finding.status === 'Telah Diperbaiki'
-                                    ? 'bg-blue-600 text-white shadow-2xs'
-                                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50'
-                                }`}
-                              >
-                                Telah Diperbaiki
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                        <span>Target: Paragraf {finding.paragraphIndex || 1}</span>
+                        <span
+                          className={`font-semibold ${
+                            isAiSearch ? 'text-purple-600' : 'text-blue-600'
+                          }`}
+                        >
+                          Lihat ke naskah →
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
@@ -1022,21 +487,147 @@ export const DetailSplitViewPage: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* RIGHT COLUMN: NASKAH BERITA (READ-ONLY DARI CMS) DENGAN HIGHLIGHT RAPI (7 Cols) */}
+        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col overflow-hidden lg:h-[calc(100vh-250px)] lg:max-h-[calc(100vh-250px)] lg:min-h-[560px] lg:sticky lg:top-4">
+          {/* Card Header */}
+          <div className="shrink-0 p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-white z-10">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900">
+                Naskah Berita (Read-Only dari CMS)
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                428 Kata · 3 Paragraf · 06 Nov 2026, 14:45 WIB
+              </p>
+            </div>
+
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
+              <span>Sumber: Portal RRI CMS</span>
+            </span>
+          </div>
+
+          {/* Card Body - Natural Editorial Article with Metric-specific Highlighting */}
+          <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-4 text-sm text-slate-800 leading-relaxed font-sans">
+            {/* Title / Heading */}
+            <div
+              id="art-p-1"
+              className={`p-2.5 rounded-lg transition-all ${
+                activeTab === 'seo'
+                  ? selectedFindingId === 'f-seo-1'
+                    ? 'bg-purple-100 border-l-4 border-purple-600 ring-2 ring-purple-500/30'
+                    : 'bg-purple-50/70 border-l-4 border-purple-400'
+                  : ''
+              }`}
+            >
+              <h3 className="text-lg font-bold text-slate-950 leading-snug">
+                Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit
+              </h3>
+              {activeTab === 'seo' && (
+                <span className="text-[11px] font-semibold text-purple-700 block mt-1">
+                  Tag SEO: Judul Artikel Berita
+                </span>
+              )}
+            </div>
+
+            {/* Paragraph 1 - Lead */}
+            <div
+              id="art-p-1-lead"
+              className={`p-3 rounded-lg transition-all ${
+                activeTab === 'seo'
+                  ? selectedFindingId === 'f-seo-2'
+                    ? 'bg-purple-100 border-l-4 border-purple-600 ring-2 ring-purple-500/30'
+                    : 'bg-purple-50/50 border-l-4 border-purple-300'
+                  : 'bg-transparent'
+              }`}
+            >
+              <p className="text-slate-800 text-justify leading-relaxed">
+                <strong className="text-slate-900 font-semibold">BIAK, PAPUA</strong> — Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit dengan sukses pada Kamis dini hari dari kompleks peluncuran antariksa terpadu Biak Numfor, Papua.
+              </p>
+            </div>
+
+            {/* Paragraph 2 - Kutipan & Spesifikasi (Kemiripan / Buku Gaya) */}
+            <div
+              id="art-p-2"
+              className={`p-3.5 rounded-lg transition-all ${
+                activeTab === 'kemiripan'
+                  ? selectedFindingId === 'f-kmp-1'
+                    ? 'bg-emerald-100/80 border-l-4 border-emerald-600 ring-2 ring-emerald-500/30'
+                    : 'bg-emerald-50/70 border-l-4 border-emerald-500'
+                  : activeTab === 'buku_gaya' && selectedFindingId === 'f-bgy-2'
+                  ? 'bg-amber-100/80 border-l-4 border-amber-600 ring-2 ring-amber-500/30'
+                  : 'bg-transparent'
+              }`}
+            >
+              <p className="text-slate-800 text-justify leading-relaxed">
+                Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer di atas permukaan laut.
+              </p>
+              {activeTab === 'kemiripan' && (
+                <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-emerald-800">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block" />
+                  <span>Sorotan Kemiripan: Mirip dengan kompas.com (78%)</span>
+                </div>
+              )}
+            </div>
+
+            {/* Paragraph 3 - Telemetri & Nomenklatur Lembaga (Kemiripan & Buku Gaya) */}
+            <div
+              id="art-p-3"
+              className={`p-3.5 rounded-lg transition-all ${
+                activeTab === 'buku_gaya'
+                  ? selectedFindingId === 'f-bgy-1'
+                    ? 'bg-amber-100/80 border-l-4 border-amber-600 ring-2 ring-amber-500/30'
+                    : 'bg-amber-50/70 border-l-4 border-amber-500'
+                  : activeTab === 'kemiripan'
+                  ? selectedFindingId === 'f-kmp-2' || selectedFindingId === 'f-kmp-3'
+                    ? 'bg-emerald-100/80 border-l-4 border-emerald-600 ring-2 ring-emerald-500/30'
+                    : 'bg-emerald-50/60 border-l-4 border-emerald-400'
+                  : 'bg-transparent'
+              }`}
+            >
+              <p className="text-slate-800 text-justify leading-relaxed">
+                Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak hanya 12 menit pasca lepas landas. Dalam keterangan pers tertulisnya, "...menurut kepala badan riset saat meninjau langsung kesiapan pusat kendali peluncuran satelit di pulau terluar tersebut."
+              </p>
+              {activeTab === 'buku_gaya' && (
+                <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-amber-900">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block" />
+                  <span>Kaidah Buku Gaya: Frasa "kepala badan riset" perlu disesuaikan dengan nomenklatur baku BRIN (Pasal 4)</span>
+                </div>
+              )}
+              {activeTab === 'kemiripan' && (
+                <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-emerald-800">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block" />
+                  <span>Sorotan Kemiripan: Mirip dengan antaranews.com (78%)</span>
+                </div>
+              )}
+            </div>
+
+            {/* Paragraph 4 - Wilayah 3T & Penutup */}
+            <div
+              id="art-p-4"
+              className={`p-3.5 rounded-lg transition-all ${
+                activeTab === 'buku_gaya' && selectedFindingId === 'f-bgy-3'
+                  ? 'bg-amber-100/80 border-l-4 border-amber-600 ring-2 ring-amber-500/30'
+                  : activeTab === 'seo' && (selectedFindingId === 'f-seo-5' || selectedFindingId?.startsWith('f-ais'))
+                  ? 'bg-purple-100/80 border-l-4 border-purple-600 ring-2 ring-purple-500/30'
+                  : 'bg-transparent'
+              }`}
+            >
+              <p className="text-slate-800 text-justify leading-relaxed">
+                Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk seluruh fasilitas publik, puskesmas, dan sekolah di kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.
+              </p>
+              {activeTab === 'buku_gaya' && selectedFindingId === 'f-bgy-3' && (
+                <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-amber-900">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block" />
+                  <span>Kaidah Buku Gaya: Penulisan akronim wilayah 3T dan pembakuan huruf kapital</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Ignore Reason Modal */}
-      <IgnoreFindingReasonModal
-        isOpen={Boolean(ignoringFinding)}
-        onClose={() => setIgnoringFinding(null)}
-        onConfirm={(reason) => {
-          if (ignoringFinding) {
-            updateFindingStatus(ignoringFinding.id, 'Diabaikan', reason);
-          }
-        }}
-        finding={ignoringFinding}
-      />
-
-      {/* Style Guide PDF Text Reader Modal */}
+      {/* Modal Buku Gaya */}
       <BukuGayaTextModal
         isOpen={isStyleGuideModalOpen}
         onClose={() => setIsStyleGuideModalOpen(false)}

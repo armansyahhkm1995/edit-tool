@@ -10,7 +10,8 @@ export interface User {
   status: 'active' | 'inactive';
 }
 
-export type CMSStatus = 'Menunggu Review' | 'Diterima' | 'Diabaikan' | 'Telah Diperbaiki' | 'Draf' | 'Terbit';
+export type ArticleStatus = 'Draft' | 'Pending' | 'Publish' | 'Review';
+export type CMSStatus = 'Menunggu Review' | 'Diterima' | 'Diabaikan' | 'Telah Diperbaiki' | 'Draf' | 'Terbit' | ArticleStatus;
 export type CheckStatus = 'Belum Diperiksa' | 'Aman' | 'Pelanggaran';
 export type FindingSeverity = 'Tinggi' | 'Sedang' | 'Rendah';
 export type FindingStatus = 'Belum Ditandai' | 'Sudah Ditandai' | 'Diterima' | 'Diabaikan' | 'Telah Diperbaiki';
@@ -77,6 +78,7 @@ export interface CheckHistoryItem {
   styleGuideCount?: number;
   aiDetectionCount?: number;
   seoAiCount?: number;
+  articleStatus?: ArticleStatus;
 }
 
 export interface WhitelistSource {
