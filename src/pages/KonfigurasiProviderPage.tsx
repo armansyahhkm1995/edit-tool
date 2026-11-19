@@ -158,34 +158,19 @@ export const KonfigurasiProviderPage: React.FC = () => {
           {/* List of 5 Metrics Thresholds */}
           <div className="space-y-3.5 pt-1">
             {metrics.map((metric) => {
-              const IconComponent = metric.icon;
               return (
                 <div
                   key={metric.id}
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl border border-slate-200 bg-white hover:border-blue-200 hover:shadow-xs transition-all"
                 >
-                  <div className="flex items-start gap-3.5 max-w-2xl">
-                    <div
-                      className={`w-10 h-10 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 ${metric.iconBg}`}
-                    >
-                      <IconComponent className="w-5 h-5" />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-sm font-bold text-slate-900">{metric.name}</h3>
-                        <span
-                          className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${metric.badgeClass}`}
-                        >
-                          {metric.badge}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-600 leading-relaxed">
-                        {metric.description}
-                      </p>
-                    </div>
+                  <div className="max-w-2xl space-y-1">
+                    <h3 className="text-sm font-bold text-slate-900">{metric.name}</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      {metric.description}
+                    </p>
                   </div>
 
-                  <div className="flex items-center gap-3 sm:self-center self-end shrink-0 pl-13 sm:pl-0">
+                  <div className="flex items-center gap-3 sm:self-center self-end shrink-0">
                     <div className="text-right hidden md:block">
                       <span className="text-xs font-medium text-slate-400 block">
                         {metric.note}

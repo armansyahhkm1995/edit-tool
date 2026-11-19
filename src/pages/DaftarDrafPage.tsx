@@ -112,7 +112,6 @@ export const DaftarDrafPage: React.FC = () => {
               <tr>
                 <th className="py-3 px-4 sm:px-6 font-semibold">Judul Draft</th>
                 <th className="py-3 px-4 font-semibold">Status Artikel</th>
-                <th className="py-3 px-4 font-semibold">Status Pemeriksaan</th>
                 <th className="py-3 px-4 font-semibold">Waktu Ubah</th>
                 <th className="py-3 px-4 text-center font-semibold">Aksi</th>
               </tr>
@@ -150,23 +149,6 @@ export const DaftarDrafPage: React.FC = () => {
                       </span>
                     </td>
 
-                    {/* Status Pemeriksaan (Pill badges) */}
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      {draft.checkStatus === 'Pelanggaran' ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                          {draft.violationCount || 5} Pelanggaran
-                        </span>
-                      ) : draft.checkStatus === 'Aman' ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          Aman
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                          Belum Diperiksa
-                        </span>
-                      )}
-                    </td>
-
                     {/* Waktu Ubah */}
                     <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-500">
                       {draft.updatedAt}
@@ -191,7 +173,7 @@ export const DaftarDrafPage: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                  <td colSpan={4} className="py-12 text-center text-slate-500">
                     <p className="font-semibold text-slate-700">Tidak ada draf yang cocok</p>
                     <p className="text-xs mt-1">Coba sesuaikan kata kunci pencarian atau filter status</p>
                   </td>

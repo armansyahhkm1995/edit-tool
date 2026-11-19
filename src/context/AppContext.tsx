@@ -298,7 +298,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       id: `wl-${Date.now()}`,
       domain,
       type: domain.includes('/') ? 'URL' : 'Domain',
-      addedBy: currentUser.name,
+      addedBy: `${currentUser.name} | RRI Jakarta`,
       addedAt: new Date().toLocaleString('id-ID', {
         day: '2-digit',
         month: 'short',
