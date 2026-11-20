@@ -19,6 +19,7 @@ export const DetailSplitViewPage: React.FC = () => {
     isAiAnalyzing,
     setCurrentPage,
     styleGuides,
+    aiConfig,
   } = useApp();
 
   // Modals state
@@ -87,6 +88,10 @@ export const DetailSplitViewPage: React.FC = () => {
         isAiAnalyzing={isAiAnalyzing}
         bukuGayaCount={bukuGayaCount}
         seoCount={seoCount}
+        similarityThreshold={aiConfig.similarityThreshold}
+        aiDetectionThreshold={aiConfig.aiDetectionThreshold}
+        styleGuideThreshold={aiConfig.styleGuideThreshold}
+        seoThreshold={aiConfig.seoThreshold}
       />
 
       {/* TAB NAVIGATION: MEMBAWAHI ARTIKEL DI KANAN DAN TEMUAN DI KIRI */}

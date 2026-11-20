@@ -731,7 +731,7 @@ export const mockAIConfig: AIProviderConfig = {
   similarityEngine: 'inhouse',
   externalApiKey: 'copyleaks-ent-••••••••••••••••331A',
   similarityThreshold: 20,
-  styleGuideThreshold: 80,
+  styleGuideThreshold: 3,
   seoThreshold: 75,
   aiSearchThreshold: 70,
   aiDetectionThreshold: 30,

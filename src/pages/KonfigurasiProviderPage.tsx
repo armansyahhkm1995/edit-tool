@@ -8,7 +8,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
   const { showToast } = useToast();
 
   const [similarityThreshold, setSimilarityThreshold] = useState(aiConfig.similarityThreshold ?? 20);
-  const [styleGuideThreshold, setStyleGuideThreshold] = useState(aiConfig.styleGuideThreshold ?? 80);
+  const [styleGuideThreshold, setStyleGuideThreshold] = useState(aiConfig.styleGuideThreshold ?? 3);
   const [seoThreshold, setSeoThreshold] = useState(aiConfig.seoThreshold ?? 75);
   const [aiSearchThreshold, setAiSearchThreshold] = useState(aiConfig.aiSearchThreshold ?? 70);
   const [aiDetectionThreshold, setAiDetectionThreshold] = useState(aiConfig.aiDetectionThreshold ?? 30);
@@ -27,7 +27,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
 
   const handleReset = () => {
     setSimilarityThreshold(aiConfig.similarityThreshold ?? 20);
-    setStyleGuideThreshold(aiConfig.styleGuideThreshold ?? 80);
+    setStyleGuideThreshold(aiConfig.styleGuideThreshold ?? 3);
     setSeoThreshold(aiConfig.seoThreshold ?? 75);
     setAiSearchThreshold(aiConfig.aiSearchThreshold ?? 70);
     setAiDetectionThreshold(aiConfig.aiDetectionThreshold ?? 30);
@@ -56,20 +56,20 @@ export const KonfigurasiProviderPage: React.FC = () => {
     {
       id: 'style_guide',
       name: '2. Kepatuhan Buku Gaya Editorial',
-      badge: 'Min. Kepatuhan',
+      badge: 'Maks. Toleransi',
       badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
       icon: BookOpen,
       iconBg: 'bg-amber-50 text-amber-600 border-amber-200',
       description:
-        'Tentukan ambang batas minimal persentase kepatuhan draft berita terhadap kaidah jurnalistik, ejaan baku KBBI, serta pedoman buku gaya redaksional RRI.',
-      label: 'Ambang Batas Kepatuhan Buku Gaya:',
+        'Tentukan ambang batas minimal jumlah kepatuhan draft berita yang boleh dilanggar terhadap kaidah jurnalistik, ejaan baku KBBI, serta pedoman buku gaya redaksional RRI.',
+      label: 'Batas Toleransi Pelanggaran Buku Gaya:',
       value: styleGuideThreshold,
       setValue: setStyleGuideThreshold,
-      unit: '%',
-      min: 1,
+      unit: '',
+      min: 0,
       max: 100,
-      placeholder: '80',
-      note: 'Standar: 80%',
+      placeholder: '3',
+      note: 'Standar: 3 kepatuhan',
     },
     {
       id: 'seo',
@@ -184,11 +184,15 @@ export const KonfigurasiProviderPage: React.FC = () => {
                         value={metric.value}
                         onChange={(e) => metric.setValue(Number(e.target.value))}
                         placeholder={metric.placeholder}
-                        className="w-28 h-11 pl-3 pr-10 text-sm font-bold text-slate-900 bg-white border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 text-center shadow-2xs"
+                        className={`w-28 h-11 text-sm font-bold text-slate-900 bg-white border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 text-center shadow-2xs ${
+                          metric.unit ? 'pl-3 pr-10' : 'px-3'
+                        }`}
                       />
-                      <span className="absolute right-3 text-xs font-semibold text-slate-400 pointer-events-none">
-                        {metric.unit}
-                      </span>
+                      {metric.unit ? (
+                        <span className="absolute right-3 text-xs font-semibold text-slate-400 pointer-events-none">
+                          {metric.unit}
+                        </span>
+                      ) : null}
                     </div>
                   </div>
                 </div>
