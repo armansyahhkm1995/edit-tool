@@ -188,7 +188,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
             onClick={handleReset}
             className="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
           >
-            Batal / Reset
+            Reset ke Pengaturan Awal
           </button>
           <button
             type="submit"
