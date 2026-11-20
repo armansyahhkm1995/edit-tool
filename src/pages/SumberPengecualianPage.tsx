@@ -13,7 +13,6 @@ export const SumberPengecualianPage: React.FC = () => {
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
 
   // Modals state
   const [isAddEditOpen, setIsAddEditOpen] = useState(false);
@@ -28,17 +27,10 @@ export const SumberPengecualianPage: React.FC = () => {
         item.addedBy.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchType = !typeFilter || item.type === typeFilter;
-      const matchStatus = !statusFilter || item.status === statusFilter;
 
-      return matchSearch && matchType && matchStatus;
+      return matchSearch && matchType;
     });
-  }, [whitelist, searchTerm, typeFilter, statusFilter]);
-
-  const handleClearFilters = () => {
-    setSearchTerm('');
-    setTypeFilter('');
-    setStatusFilter('');
-  };
+  }, [whitelist, searchTerm, typeFilter]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-5 animate-fade-in">
@@ -74,9 +66,6 @@ export const SumberPengecualianPage: React.FC = () => {
           setSearchTerm={setSearchTerm}
           typeFilter={typeFilter}
           setTypeFilter={setTypeFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          onClearFilters={handleClearFilters}
         />
 
         <WhitelistTable

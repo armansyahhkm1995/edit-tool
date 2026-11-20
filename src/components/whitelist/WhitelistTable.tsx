@@ -18,7 +18,7 @@ export const WhitelistTable: React.FC<WhitelistTableProps> = ({
       {/* Table Content */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50/70 border-b border-slate-200 text-xs font-semibold text-slate-600">
+          <thead className="bg-slate-50/70 border-y border-slate-200 text-xs font-semibold text-slate-600">
             <tr>
               <th className="py-3 px-4 sm:px-6 font-semibold">Domain / URL spesifik</th>
               <th className="py-3 px-4 font-semibold">Ditambahkan Oleh</th>
