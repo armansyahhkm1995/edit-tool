@@ -51,6 +51,11 @@ export const RiwayatFilterBar: React.FC<RiwayatFilterBarProps> = ({
             <option value="hari-ini">Hari Ini</option>
             <option value="7-hari">7 Hari Terakhir</option>
             <option value="30-hari">30 Hari Terakhir</option>
+            <option value="3-bulan">3 Bulan Terakhir</option>
+            <option value="6-bulan">6 Bulan Terakhir</option>
+            <option value="9-bulan">9 Bulan Terakhir</option>
+            <option value="1-tahun">1 Tahun Terakhir</option>
+            <option value="lebih-1-tahun">Lebih dari 1 Tahun</option>
           </select>
         </div>
 

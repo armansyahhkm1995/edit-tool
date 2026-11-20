@@ -135,7 +135,7 @@ export const DetailArticleColumn: React.FC<DetailArticleColumnProps> = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-600 inline-block" />
                 <span>
                   {selectedFindingId === 'f-seo-3'
-                    ? 'Optimasi SEO: Penempatan Keyword Utama & LSI Semantik'
+                    ? 'Optimasi SEO: Penempatan Kata Kunci Utama & LSI Semantik'
                     : selectedFindingId === 'f-seo-5'
                     ? 'Optimasi SEO: Usulan Sub-heading H2 Terstruktur'
                     : 'AI-Search: Konteks Historis Satelit Sebelumnya'}

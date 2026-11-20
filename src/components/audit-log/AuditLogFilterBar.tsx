@@ -60,6 +60,11 @@ export const AuditLogFilterBar: React.FC<AuditLogFilterBarProps> = ({
           >
             <option value="">7 Hari Terakhir</option>
             <option value="30">30 Hari Terakhir</option>
+            <option value="90">3 Bulan Terakhir</option>
+            <option value="180">6 Bulan Terakhir</option>
+            <option value="270">9 Bulan Terakhir</option>
+            <option value="365">1 Tahun Terakhir</option>
+            <option value="gt365">Lebih dari 1 Tahun</option>
             <option value="all">Semua Waktu</option>
           </select>
         </div>

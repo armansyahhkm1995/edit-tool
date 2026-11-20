@@ -274,9 +274,9 @@ export const mockDefaultDraft: CMSDraft = {
       category: 'seo',
       severity: 'Sedang',
       status: 'Sudah Ditandai',
-      title: 'Optimasi Keyword (Kata Kunci Utama & LSI)',
+      title: 'Optimasi Kata Kunci (Kata Kunci Utama & LSI)',
       matchedSnippet: 'Satelit Nusantara Tiga, internet 5G kawasan 3T, orbit geostasioner',
-      recommendation: 'Tempatkan keyword utama "Satelit Nusantara Tiga" pada 100 kata pertama dan tambahkan LSI "Badan Riset dan Inovasi Nasional (BRIN)" untuk meningkatkan relevansi semantik.',
+      recommendation: 'Tempatkan kata kunci utama "Satelit Nusantara Tiga" pada 100 kata pertama dan tambahkan LSI "Badan Riset dan Inovasi Nasional (BRIN)" untuk meningkatkan relevansi semantik.',
       paragraphIndex: 2,
     },
     {
