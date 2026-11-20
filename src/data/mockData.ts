@@ -123,15 +123,20 @@ export const mockDefaultDraft: CMSDraft = {
     },
     {
       id: 2,
-      text: '"Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer di atas permukaan laut."',
+      text: 'Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer dengan efisiensi transmisi mencapai 98% di atas permukaan laut.',
       matchedFindingId: 'f-kmp-1',
       similarityPercent: 78,
       matchedSource: 'antaranews.com',
     },
     {
       id: 3,
-      text: 'Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak hanya 12 menit pasca lepas landas. Dalam keterangan pers tertulisnya, "...menurut kepala badan riset saat meninjau langsung kesiapan pusat kendali peluncuran satelit di pulau terluar tersebut." Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk seluruh fasilitas publik, puskesmas, dan sekolah di kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.',
+      text: 'Sinyal telemetri pertama tertangkap stasiun pengendali bumi di Biak hanya 12 menit pasca lepas landas. Dalam keterangan pers tertulisnya, "...menurut kepala badan riset saat meninjau langsung kesiapan pusat kendali peluncuran satelit di pulau terluar tersebut."',
       matchedFindingId: 'f-bgy-1',
+    },
+    {
+      id: 4,
+      text: 'Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk seluruh fasilitas publik, puskesmas, dan sekolah pasca peluncuran di kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.',
+      matchedFindingId: 'f-bgy-3',
     },
   ],
   findings: [
@@ -209,24 +214,24 @@ export const mockDefaultDraft: CMSDraft = {
       id: 'f-bgy-1',
       code: 'Temuan #BGY-01',
       category: 'buku_gaya',
-      severity: 'Sedang',
+      severity: 'Tinggi',
       status: 'Sudah Ditandai',
-      title: 'Penulisan Nomenklatur Lembaga & Singkatan Resmi',
-      matchedSnippet: '...menurut kepala badan riset saat meninjau langsung kesiapan...',
-      ruleViolated: 'Penulisan Nomenklatur Lembaga & Singkatan Resmi (Buku Gaya Pasal 4)',
-      recommendation: 'Saran: Ganti dengan "Badan Riset dan Inovasi Nasional (BRIN)" pada penyebutan awal, kemudian gunakan "BRIN" pada kalimat berikutnya.',
+      title: 'Kaidah Kutipan Langsung & Verba Tutur (Bab V.7.n)',
+      matchedSnippet: '...Dalam keterangan pers tertulisnya, "...menurut kepala badan riset saat meninjau langsung kesiapan pusat kendali peluncuran satelit di pulau terluar tersebut."',
+      ruleViolated: 'Bab V.7.n: Penulisan Kutipan Langsung & Verba Tutur (Buku Gaya Hal. 61–62)',
+      recommendation: 'Sesuai Buku Gaya RRI Bab V.7.n & Bab V.6.b, kutipan langsung tidak boleh menggunakan kata tugas "menurut" di dalam tanda petik. Gunakan verba tutur baku di luar kutipan seperti "katanya, menegaskan" atau "ujarnya". Contoh: "...kesiapan pusat kendali peluncuran satelit di pulau terluar tersebut," kata Kepala BRIN Laksana Tri Handoko, menegaskan.',
       paragraphIndex: 3,
     },
     {
       id: 'f-bgy-2',
       code: 'Temuan #BGY-02',
       category: 'buku_gaya',
-      severity: 'Rendah',
+      severity: 'Sedang',
       status: 'Sudah Ditandai',
-      title: 'Format Satuan Ukuran & Angka Ribuan',
-      matchedSnippet: '...pada ketinggian 35.786 kilometer di atas permukaan laut...',
-      ruleViolated: 'Penulisan Angka & Simbol Metrik (Buku Gaya Pasal 7)',
-      recommendation: 'Saran: Pertahankan penulisan tanda titik untuk pemisah ribuan "35.786 km" atau gunakan bentuk eja resmi redaksi RRI.',
+      title: 'Penulisan Lambang Persen (%) Wajib dengan Huruf (Bab V.11.e)',
+      matchedSnippet: '...dengan efisiensi transmisi mencapai 98% di atas permukaan laut.',
+      ruleViolated: 'Bab V.11.e: Penulisan Lambang Persen (Buku Gaya Hal. 66)',
+      recommendation: 'Sesuai Buku Gaya RRI Bab V.11.e, lambang persen (%) dalam badan naskah berita wajib ditulis dengan kata huruf "persen". Ubah "98%" menjadi "98 persen" guna menjaga konsistensi pembacaan naskah siaran radio dan portal web RRI.',
       paragraphIndex: 2,
     },
     {
@@ -235,10 +240,10 @@ export const mockDefaultDraft: CMSDraft = {
       category: 'buku_gaya',
       severity: 'Sedang',
       status: 'Sudah Ditandai',
-      title: 'Penulisan Wilayah Administrasi 3T',
-      matchedSnippet: '...kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.',
-      ruleViolated: 'Akronim & Singkatan Baku Wilayah (Buku Gaya Pasal 12)',
-      recommendation: 'Saran: Pastikan kepanjangan 3T ditulis dengan huruf awal kapital dan jelaskan batasan wilayah kerja regional RRI.',
+      title: 'Penulisan Bentuk Terikat \'pasca-\' Wajib Serangkai (Bab V.8.e)',
+      matchedSnippet: '...sekolah pasca peluncuran di kawasan 3T...',
+      ruleViolated: 'Bab V.8.e: Gabungan Kata Bentuk Terikat (Buku Gaya Hal. 62–63)',
+      recommendation: 'Sesuai Buku Gaya RRI Bab V.8.e, kata bentuk terikat (seperti pasca-, antar-, multi-, swa-) wajib ditulis serangkai tanpa spasi dengan kata yang mengikutinya. Ubah "pasca peluncuran" menjadi "pascapeluncuran".',
       paragraphIndex: 4,
     },
     {
@@ -652,73 +657,187 @@ export const mockWhitelist: WhitelistSource[] = [
 export const mockStyleGuideVersions: StyleGuideVersion[] = [
   {
     id: 'sg-1',
-    version: 'v2.4',
-    filename: 'Buku_Gaya_RRI_Edisi_2026_Rev3.pdf',
-    uploadedBy: 'Budi Prasetyo',
-    uploadedAt: '01 Nov 2026, 10:00 WIB',
+    version: 'Edisi 2026 (Revisi)',
+    filename: 'Buku_Gaya_Pedoman_Penulisan_Berita_KBRN_2026.pdf',
+    uploadedBy: 'Direktorat Program dan Produksi LPP RRI',
+    uploadedAt: '01 Nov 2026, 09:00 WIB',
     isActive: true,
-    pageCount: 48,
-    lineCount: 1420,
+    pageCount: 76,
+    lineCount: 1850,
     articles: [
       {
-        chapter: 'BAB I: TATA CARA PENULISAN LEMBAGA NEGARA (PASAL 4)',
-        content: `1. Pada penyebutan pertama, sebutkan nama lembaga lengkap diikuti singkatan resmi dalam tanda kurung. Contoh: Badan Riset dan Inovasi Nasional (BRIN).\n2. Penulisan nama institusi dilarang disingkat secara sepihak seperti 'badan riset' atau 'komisi anti korupsi'.`,
+        chapter: 'BAB V.6.k: PEMILIHAN KATA BAKU KBBI (HALAMAN 60)',
+        content: `Biasakan menggunakan kata yang sudah baku. Jika bingung membedakan mana kata yang baku dan tidak baku, wajib merujuk ke Kamus Besar Bahasa Indonesia (KBBI) versi daring ataupun cetak.
+
+Daftar Standardisasi Kata Baku vs Tidak Baku:
+• jemaah (baku) — jamaah (tidak baku)
+• skuad (baku) — skuat (tidak baku)
+• apotek (baku) — apotik (tidak baku)
+• analisis (baku) — analisa (tidak baku)
+• risiko (baku) — resiko (tidak baku)
+• daring / dalam jaringan (baku) — online (hindari istilah asing jika ada padanan Indonesianya).`,
       },
       {
-        chapter: 'BAB II: PENULISAN ANGKA DAN BILANGAN (PASAL 7)',
-        content: `1. Bilangan satu digit (0-9) ditulis dengan huruf, kecuali jika merujuk pada data statistik atau persentase. Contoh: 'tiga orang tersangka', tetapi '8 persen'.\n2. Angka di awal kalimat wajib ditulis dengan ejaan huruf utuh.`,
+        chapter: 'BAB V.7: PEDOMAN PENULISAN KUTIPAN BERITA (HALAMAN 60–62)',
+        content: `1. Kutipan Pernyataan Langsung: Digunakan untuk menyatakan keaslian ucapan narasumber atau memberikan variasi agar berita lebih hidup.
+Contoh: "Ketika kami mau berangkat ke lapangan, ternyata ada kabar stadion belum siap digunakan," ujar Shin Tae-yong, kecewa.
+
+2. Pemenggalan Kutipan Panjang: Kutipan langsung sebaiknya tidak terlalu panjang. Jika terlalu panjang, wajib dipenggal menjadi beberapa bagian agar lebih mudah dicerna dan dipahami pembaca.
+• Contoh Salah: "Hingga Selasa (31/5/2022), data yang sudah direkap petugas OPD di lapangan, ada 202 bangunan yang terdampak angin kencang. Rinciannya rusak berat 38 unit, rusak sedang 23 unit, rusak ringan 24 unit, dan tanpa keterangan kerusakan sebanyak 117 unit," ujar Sulaimi.
+• Contoh Benar: "Hingga Selasa 31 Mei 2022, data yang sudah direkap petugas OPD di lapangan, ada 202 bangunan yang terdampak angin kencang," ujar Sulaimi. "Rinciannya rusak berat 38 unit, rusak sedang 23 unit, rusak ringan 24 unit, dan tanpa keterangan kerusakan sebanyak 117 unit."
+
+3. Larangan Verba Salah Kaprah: Hindari penggunaan kata yang menyalahi kaidah penulisan kutipan. Kata sifat seperti "tegas/tegasnya" atau kata kerja seperti "pungkas/pungkasnya" tidak dapat digunakan untuk kalimat kutipan.
+• Contoh Salah: "..., kita harus memprioritaskan kebutuhan dalam negeri," tegasnya kepada pers. / "...saya masih menunggu arahan," pungkasnya.
+• Contoh Benar: "..., kita harus memprioritaskan kebutuhan dalam negeri," katanya, menegaskan. / "...saya masih menunggu arahan," katanya, mengakhiri. / "...," ujarnya. / "...," ucapnya.`,
       },
       {
-        chapter: 'BAB III: ATRIBUSI KUTIPAN KEMIRIPAN (PASAL 12)',
-        content: `Setiap penggunaan data atau kutipan pers dari kantor berita eksternal (Antara, Reuters, dsb.) wajib mencantumkan sumber jelas pada alinea pertama.`,
+        chapter: 'BAB V.8: PEDOMAN PENULISAN GABUNGAN KATA & BENTUK TERIKAT (HALAMAN 62–63)',
+        content: `1. Gabungan Kata Tidak Terikat Ditulis Terpisah: Baik kata pertama maupun kedua dapat berdiri mandiri tanpa harus terikat.
+Contoh: kerja sama, sepak bola, terima kasih, jati diri, rumah sakit, bulu tangkis, puting beliung, duta besar, simpang lima, cendera mata, persegi panjang, mata acara.
+
+2. Tanda Penghubung: Gabungan kata yang berpotensi menimbulkan salah persepsi wajib ditulis dengan tanda hubung.
+Contoh: "Ayah-ibu kami sedang tidak ada di rumah," ujar Laras (maksudnya: ayah dan ibu, bukan ayah dari ibu).
+
+3. Gabungan Kata Padu Ditulis Serangkai:
+Contoh: kacamata, saputangan, olahraga, beasiswa, hulubalang, kilometer, acapkali, adakalanya, bumiputra, saptamarga, perilaku, matahari, radioaktif, sukarela.
+
+4. Imbuhan Konfiks (Awalan + Akhiran Sekaligus): Ditulis serangkai.
+Contoh: dialihfungsikan, dipertanggungjawabkan, dianaktirikan.
+
+5. Bentuk Terikat Ditulis Serangkai: Gabungan kata yang terbentuk dari kata dasar dan bentuk terikat (seperti adi-, multi-, antar-, pasca-, pra-, swa-, semi-, serba-, a-) wajib ditulis serangkai tanpa spasi.
+Contoh: adidaya, multifungsi, antarpulau, pascabencana, pascalepas landas, pascapeluncuran, swakelola, semifinal, serbaguna.`,
+      },
+      {
+        chapter: 'BAB V.9: IDENTITAS SUBJEK BERITA, GELAR & PERKARA HUKUM (HALAMAN 63–65)',
+        content: `1. Ejaan Nama Asli: Identitas subjek berita atau nama orang ditulis penuh sesuai ejaan yang biasa dipakai pemilik nama.
+• Contoh Salah: Wapres Yusuf Kala / Pelatih Persib Jajang Nurjaman.
+• Contoh Benar: Wapres Jusuf Kalla / Pelatih Persib Djadjang Nurdjaman.
+
+2. Pembatasan Gelar: Pencantuman gelar narasumber digunakan bila memang diperlukan dan sesuai dengan bidang pekerjaan terkait. Hindari deretan gelar akademis/kehormatan berlebihan di badan berita straight news.
+• Contoh Salah: Ketua Umum PAN Dr. H. Zulkifli Hasan, S.E., M.M. menolak hadir...
+• Contoh Benar: Ketua Umum PAN Zulkifli Hasan menolak hadir... / Mochamad Iriawan (bukan Komjen Pol (Purn) Dr. Drs. H. Mochamad Iriawan, S.H., M.M., M.H.).
+• Pengecualian Gelar Khusus: Boleh dicantumkan pada momen pelantikan atau konteks akademik khusus (misal: Prof. dr. Ova Emilia, M.Med., Ed., Sp.OG(K)., Ph.D., resmi dilantik sebagai Rektor UGM).
+
+3. Peringkasan Jabatan Panjang: Identitas subjek berita jika terlalu panjang dapat ditulis secara ringkas dengan menunjukkan ciri keahlian, pangkat, atau jabatannya.
+• Contoh: Pejabat Pemkab Jepara, Sri Alim Yuliatun, menegaskan pihaknya... (menggantikan "Kepala Bagian Tata Usaha Dinas Kependudukan dan Catatan Sipil Kabupaten Jepara...").
+
+4. Subjek Tersangkut Kasus Hukum: Penyebutan identitas subjek berita yang sedang tersangkut masalah hukum hanya diberikan inisial (contoh: SWA, DPA, MRD), kecuali nama yang bersangkutan sudah diungkap secara resmi oleh institusi berwenang atau sudah memiliki kekuatan hukum mengikat. Korban asusila dan anak di bawah umur mutlak dirahasiakan dengan inisial.`,
+      },
+      {
+        chapter: 'BAB V.10: PEDOMAN PENULISAN NAMA TEMPAT & WILAYAH (HALAMAN 65)',
+        content: `1. Nama Lokasi: Nama lokasi atau tempat kejadian boleh dituliskan secara lengkap dengan mempertimbangkan bobot berita.
+Contoh: Kediaman Wali Kota Cimahi nonaktif di Jalan Sariasih IV, Kecamatan Sukasari, Kota Bandung, tampak sepi setelah digeledah KPK, Kamis 6 Juni 2022 malam.
+
+2. Orientasi Pembaca (Geografis): Lokasi kejadian atau peristiwa penting di kota kecil dapat dihubungkan dengan kota besar terdekat untuk memperjelas orientasi pembaca.
+Contoh:
+• "...terjadi di jalanan Abbiategrasso, kota kecil yang berjarak 15 km dari Milan."
+• "...Cimahi, kota kecil di sebelah barat Bandung."`,
+      },
+      {
+        chapter: 'BAB V.11: PEDOMAN PENULISAN BILANGAN, ANGKA & LAMBANG PERSEN (HALAMAN 65–68)',
+        content: `1. Bilangan Satu Kata Ditulis Huruf: Bilangan dalam draft berita yang dapat dinyatakan dengan satu kata ditulis dengan huruf (misal: sampai tiga kali, sembilan ribu butir), kecuali jika berupa paparan atau perincian statistik (contoh: Di antara 72 anggota yang hadir, 52 orang menyatakan setuju, 15 tidak setuju, dan 5 abstain).
+
+2. Bilangan Taksiran / Perkiraan: Ditulis dengan huruf (misal: ribuan ayam, jutaan massa, lebih dari 4 ribu bebek).
+
+3. Bilangan Awal Kalimat: Dilarang mengawali kalimat dengan angka numerik. Bilangan pada awal kalimat wajib ditulis dengan huruf atau didahului kata keterangan (sebanyak, sekitar, lebih dari).
+• Contoh Salah: 7.200 honorer Tangsel terimbas... / 25.000 naskah kuno...
+• Contoh Benar: Sebanyak 7.200 honorer Tangsel terimbas... / Di perpustakaan itu tersimpan 25 ribu naskah kuno.
+
+4. Larangan Penulisan Ganda Angka & Huruf: Dilarang menulis angka dan huruf sekaligus di berita umum (hanya berlaku pada dokumen legal/resmi).
+• Contoh Salah: ...barang curian 8 (delapan) unit sepeda motor.
+• Contoh Benar: ...barang curian delapan unit sepeda motor.
+
+5. Lambang Persen (%) Wajib Huruf: Lambang persen (%) di badan naskah berita wajib ditulis dengan kata huruf "persen".
+Contoh: "...hanya naik delapan persen pada musim panen", "Hanya 55 persen warga yang menggunakan hak pilih".
+
+6. Simbol Mata Uang & Valuta Asing: Ditulis serangkai tanpa spasi bersama simbol (contoh: Rp5.000, Rp30 ribu, USD45 juta). Nilai dalam mata uang asing harus disertai perkiraan nilai kurs saat itu dalam rupiah (contoh: USD200 juta (setara Rp2,8 triliun)).
+
+7. Bilangan Desimal: Ditulis menggunakan tanda koma, bukan titik (contoh: 4,5 kg, 30,5 km, 4,9 skala Richter).`,
+      },
+      {
+        chapter: 'BAB V.12: KETENTUAN FOTO PENDUKUNG & FORMAT CAPTION (HALAMAN 68)',
+        content: `1. Kewajiban Foto: Setiap berita harus dilengkapi foto atau ilustrasi visual aktual untuk menambah daya tarik dan melengkapi informasi.
+2. Hak Cipta: Sedapat mungkin foto karya RRI sendiri. Jika dari sumber lain, wajib dicantumkan pemilik hak cipta foto.
+3. Format Keterangan Foto (Caption): Maksimal 2 kalimat, mengandung unsur 4W (what, who, where, when) dan tanggal pengambilan foto. Pada akhir keterangan foto dicantumkan sumber atribusi.
+Contoh: Polisi berjaga untuk mengarahkan kendaraan saat penerapan aturan ganjil-genap di Jalan Gatot Soebroto, Jakarta Selatan, Kamis 12 Mei 2022. (Foto: Antara/Reno Esmir) / (Foto: RRI/M. Kusnaeni).`,
+      },
+      {
+        chapter: 'BAB V.14: PEDOMAN PENULISAN TAG BERITA & KATEGORI CMS (HALAMAN 69–70)',
+        content: `1. Definisi Tag: Kata atau frasa deskriptif yang melekat pada artikel untuk mengelompokkan konten berdasarkan topik spesifik, membantu pembaca menemukan berita serupa, dan meningkatkan visibilitas konten (SEO) di mesin pencari.
+2. Perbedaan Tag vs Kategori dalam CMS:
+• Kategori: Lebih luas dan hierarkis (contoh: Olahraga, Berita Politik, Ekonomi).
+• Tag: Lebih spesifik dan detail (contoh: "Satelit Nusantara 3", "Biak Numfor", "Internet 5G", "BRIN", "Pemilu 2024").`,
+      },
+      {
+        chapter: 'BAB V.15: PENGGUNAAN ARTIFICIAL INTELLIGENCE (AI) (HALAMAN 70–72)',
+        content: `Prinsip Dasar:
+1. Akuntabilitas Manusia: Segala bentuk karya jurnalistik yang diproduksi dengan bantuan AI tetap di bawah tanggung jawab penuh jurnalis dan editor.
+2. Akurasi & Verifikasi: Konten AI wajib diverifikasi secara manual oleh jurnalis.
+3. AI Sebagai Alat Bantu: AI hanya mempercepat proses teknis (draft awal, ringkasan, perbaikan struktur kalimat, penerjemahan, optimasi SEO). Keputusan sudut pandang dan nilai berita tetap di tangan jurnalis.
+
+Larangan Keras:
+• Pembuatan berita palsu, disinformasi, atau manipulatif.
+• Manipulasi audio/visual (deepfake) yang menipu persepsi publik.
+• Pembuatan kutipan, wawancara, atau pernyataan palsu narasumber.
+• Produksi dan penerbitan konten otomatis tanpa supervisi manusia.
+
+Etika & Transparansi:
+Penulis dan editor wajib bersikap terbuka dengan menyertakan catatan di akhir berita:
+"Berita ini diolah dan disunting dengan melibatkan teknologi AI."
+(Mengacu pada Peraturan Dewan Pers Nomor 1 Tahun 2025 Tentang Pedoman Penggunaan Kecerdasan Buatan dalam Karya Jurnalistik).`,
+      },
+      {
+        chapter: 'BAB V.1 - V.5: KAIDAH STRAIGHT NEWS KBRN (5 ATURAN EMAS) (HALAMAN 51–55)',
+        content: `5 Standar Emas Penulisan Straight News KBRN:
+• 70 : Maksimal karakter huruf dalam judul berita (aktif, menarik, tanpa tanda titik di akhir).
+• 2 : Jumlah kalimat dalam satu alinea (terdiri atas 2-3 kalimat pendek).
+• 18 : Maksimal kata dalam satu kalimat.
+• 7 : Minimal alinea dalam satu berita langsung (straight news).
+• 15 : Maksimal alinea dalam satu berita langsung (straight news).
+
+Format Identitas Dateline Pembuka:
+Awal penulisan berita wajib diawali identitas:
+"RRI.CO.ID, [Nama Lokasi] - [Isi Kalimat Teras]..."
+Contoh: RRI.CO.ID, Jakarta - Komisi Pemberantasan Korupsi menangkap mantan Bupati...`,
+      },
+      {
+        chapter: 'BAB VI & LAMPIRAN: KETENTUAN TAMBAHAN & PUEBI (HALAMAN 72–75)',
+        content: `Hal-hal yang belum diatur dalam pedoman Buku Gaya ini selanjutnya mengikuti aturan baku dalam:
+1. Peraturan Kementerian Pendidikan dan Kebudayaan Nomor 50 Tahun 2015 tentang Pedoman Umum Ejaan Bahasa Indonesia (PUEBI).
+2. Kode Etik Jurnalistik (KEJ) Dewan Pers.
+3. Kamus Besar Bahasa Indonesia (KBBI) Daring (https://kbbi.kemdikbud.go.id).`,
       },
     ],
   },
   {
     id: 'sg-2',
-    version: 'v2.3',
-    filename: 'Buku_Gaya_RRI_Edisi_2026_Rev3.pdf',
-    uploadedBy: 'Budi Prasetyo',
-    uploadedAt: '01 Nov 2026, 10:00 WIB',
+    version: 'Edisi 2022',
+    filename: 'Buku_Gaya_Pedoman_Penulisan_Berita_2022.pdf',
+    uploadedBy: 'Pusat Pemberitaan LPP RRI',
+    uploadedAt: '15 Jan 2022, 11:30 WIB',
     isActive: false,
-    pageCount: 48,
-    lineCount: 1420,
+    pageCount: 68,
+    lineCount: 1620,
     articles: [
       {
-        chapter: 'BAB I: TATA CARA PENULISAN LEMBAGA NEGARA (PASAL 4)',
-        content: `1. Pada penyebutan pertama, sebutkan nama lembaga lengkap diikuti singkatan resmi dalam tanda kurung. Contoh: Badan Riset dan Inovasi Nasional (BRIN).\n2. Penulisan nama institusi dilarang disingkat secara sepihak seperti 'badan riset' atau 'komisi anti korupsi'.`,
-      },
-      {
-        chapter: 'BAB II: PENULISAN ANGKA DAN BILANGAN (PASAL 7)',
-        content: `1. Bilangan satu digit (0-9) ditulis dengan huruf, kecuali jika merujuk pada data statistik atau persentase. Contoh: 'tiga orang tersangka', tetapi '8 persen'.\n2. Angka di awal kalimat wajib ditulis dengan ejaan huruf utuh.`,
-      },
-      {
-        chapter: 'BAB III: ATRIBUSI KUTIPAN KEMIRIPAN (PASAL 12)',
-        content: `Setiap penggunaan data atau kutipan pers dari kantor berita eksternal (Antara, Reuters, dsb.) wajib mencantumkan sumber jelas pada alinea pertama.`,
+        chapter: 'PEDOMAN PEMBERITAAN RRI EDISI 2022 (ARSIP)',
+        content: `Versi arsip panduan pemberitaan teks RRI tahun 2022 sebelum pembaruan Pedoman Berita KBRN Edisi 2026. Standar penulisan lama mencakup 4 pilar berita dan rubrikasi dasar.`,
       },
     ],
   },
   {
     id: 'sg-3',
-    version: 'v2.2',
-    filename: 'Buku_Gaya_RRI_Edisi_2026_Rev3.pdf',
-    uploadedBy: 'Budi Prasetyo',
-    uploadedAt: '01 Nov 2026, 10:00 WIB',
+    version: 'Edisi 2020',
+    filename: 'Buku_Pedoman_Gaya_Pemberitaan_RRI_2020.pdf',
+    uploadedBy: 'Direktorat Program dan Produksi',
+    uploadedAt: '10 Feb 2020, 08:45 WIB',
     isActive: false,
-    pageCount: 48,
-    lineCount: 1420,
+    pageCount: 54,
+    lineCount: 1280,
     articles: [
       {
-        chapter: 'BAB I: TATA CARA PENULISAN LEMBAGA NEGARA (PASAL 4)',
-        content: `1. Pada penyebutan pertama, sebutkan nama lembaga lengkap diikuti singkatan resmi dalam tanda kurung. Contoh: Badan Riset dan Inovasi Nasional (BRIN).\n2. Penulisan nama institusi dilarang disingkat secara sepihak seperti 'badan riset' atau 'komisi anti korupsi'.`,
-      },
-      {
-        chapter: 'BAB II: PENULISAN ANGKA DAN BILANGAN (PASAL 7)',
-        content: `1. Bilangan satu digit (0-9) ditulis dengan huruf, kecuali jika merujuk pada data statistik atau persentase. Contoh: 'tiga orang tersangka', tetapi '8 persen'.\n2. Angka di awal kalimat wajib ditulis dengan ejaan huruf utuh.`,
-      },
-      {
-        chapter: 'BAB III: ATRIBUSI KUTIPAN KEMIRIPAN (PASAL 12)',
-        content: `Setiap penggunaan data atau kutipan pers dari kantor berita eksternal (Antara, Reuters, dsb.) wajib mencantumkan sumber jelas pada alinea pertama.`,
+        chapter: 'BUKU PEDOMAN PEMBERITAAN RRI EDISI 2020 (ARSIP)',
+        content: `Versi arsip awal standar penulisan naskah siaran dan berita online RRI tahun 2020 sebelum penerapan format KBRN terpadu.`,
       },
     ],
   },

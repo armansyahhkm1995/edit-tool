@@ -106,7 +106,7 @@ export const DetailArticleColumn: React.FC<DetailArticleColumnProps> = ({
           }`}
         >
           <p className="text-slate-800 text-justify leading-relaxed">
-            Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer di atas permukaan laut.
+            Peluncuran menggunakan roket pendorong generasi terbaru yang dirancang khusus guna menempatkan muatan telekomunikasi pita lebar di orbit geostasioner khatulistiwa pada ketinggian 35.786 kilometer dengan efisiensi transmisi mencapai 98% di atas permukaan laut.
           </p>
           {activeTab === 'kemiripan' &&
             (selectedFindingId === 'f-kmp-1' ||
@@ -124,7 +124,7 @@ export const DetailArticleColumn: React.FC<DetailArticleColumnProps> = ({
           {activeTab === 'buku_gaya' && selectedFindingId === 'f-bgy-2' && (
             <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-amber-900">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block" />
-              <span>Kaidah Buku Gaya: Format Satuan Ukuran & Angka Ribuan (Pasal 7)</span>
+              <span>Kaidah Buku Gaya: Lambang persen (%) wajib ditulis dengan kata "persen" (Bab V.11.e Hal. 66)</span>
             </div>
           )}
           {activeTab === 'seo' &&
@@ -161,7 +161,7 @@ export const DetailArticleColumn: React.FC<DetailArticleColumnProps> = ({
           {activeTab === 'buku_gaya' && selectedFindingId === 'f-bgy-1' && (
             <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-amber-900">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block" />
-              <span>Kaidah Buku Gaya: Frasa "kepala badan riset" perlu disesuaikan dengan nomenklatur baku BRIN (Pasal 4)</span>
+              <span>Kaidah Buku Gaya: Format kutipan dilarang memakai kata "menurut" & wajib gunakan verba tutur baku (Bab V.7.n Hal. 61-62)</span>
             </div>
           )}
           {activeTab === 'seo' && selectedFindingId === 'f-ais-3' && (
@@ -184,12 +184,12 @@ export const DetailArticleColumn: React.FC<DetailArticleColumnProps> = ({
           }`}
         >
           <p className="text-slate-800 text-justify leading-relaxed">
-            Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk seluruh fasilitas publik, puskesmas, dan sekolah di kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.
+            Keberhasilan peluncuran ini diproyeksikan akan memperkuat konektivitas internet 5G untuk seluruh fasilitas publik, puskesmas, dan sekolah pasca peluncuran di kawasan 3T (Terdepan, Terluar, Tertinggal) di wilayah Indonesia Timur.
           </p>
           {activeTab === 'buku_gaya' && selectedFindingId === 'f-bgy-3' && (
             <div className="mt-1.5 flex items-center gap-2 text-[11px] font-semibold text-amber-900">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block" />
-              <span>Kaidah Buku Gaya: Penulisan akronim wilayah 3T dan pembakuan huruf kapital</span>
+              <span>Kaidah Buku Gaya: Bentuk terikat 'pasca-' wajib ditulis serangkai tanpa spasi "pascapeluncuran" (Bab V.8.e Hal. 63)</span>
             </div>
           )}
           {activeTab === 'seo' && selectedFindingId === 'f-ais-4' && (

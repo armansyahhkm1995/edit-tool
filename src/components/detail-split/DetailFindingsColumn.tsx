@@ -1,6 +1,6 @@
 import React from 'react';
 import { FindingCategory, FindingItem } from '../../types';
-import { ExternalLink, BookOpen, Search, Bot } from 'lucide-react';
+import { ExternalLink, BookOpen, Search, Bot, Eye } from 'lucide-react';
 
 interface DetailFindingsColumnProps {
   activeTab: FindingCategory;
@@ -119,8 +119,9 @@ export const DetailFindingsColumn: React.FC<DetailFindingsColumnProps> = ({
             <button
               type="button"
               onClick={onOpenStyleGuideModal}
-              className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors shrink-0 cursor-pointer"
+              className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors shrink-0 cursor-pointer flex items-center gap-1.5"
             >
+              <Eye className="w-3.5 h-3.5" />
               Lihat Buku Gaya
             </button>
           </div>
