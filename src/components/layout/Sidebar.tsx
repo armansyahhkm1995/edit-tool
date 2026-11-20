@@ -107,7 +107,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
             >
               <div className="flex items-center gap-2.5 truncate">
                 <Bookmark className="w-4 h-4 shrink-0" />
-                <span className="truncate">Sumber Pengecualian</span>
+                <span className="truncate">Sumber Dikecualikan</span>
               </div>
               <ChevronRight
                 className={`w-3.5 h-3.5 shrink-0 ${

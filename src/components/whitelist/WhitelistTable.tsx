@@ -76,7 +76,7 @@ export const WhitelistTable: React.FC<WhitelistTableProps> = ({
             ) : (
               <tr>
                 <td colSpan={4} className="py-12 text-center text-slate-500">
-                  <p className="font-semibold text-slate-700">Tidak ada sumber pengecualian</p>
+                  <p className="font-semibold text-slate-700">Tidak ada sumber dikecualikan</p>
                   <p className="text-xs mt-1">Coba sesuaikan kata kunci pencarian atau filter</p>
                 </td>
               </tr>

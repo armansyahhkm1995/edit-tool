@@ -311,9 +311,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
     setWhitelist((prev) => [newItem, ...prev]);
     showToast(
-      'Sumber pengecualian baru berhasil ditambahkan ke daftar (Whitelist)',
+      'Sumber dikecualikan baru berhasil ditambahkan ke daftar (Whitelist)',
       'success',
-      'Modul Pengecualian Sumber'
+      'Modul Sumber Dikecualikan'
     );
   };
 
@@ -321,15 +321,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setWhitelist((prev) =>
       prev.map((item) => (item.id === id ? { ...item, domain, reason } : item))
     );
-    showToast('Data sumber pengecualian berhasil diperbarui', 'success', 'Modul Pengecualian Sumber');
+    showToast('Data sumber dikecualikan berhasil diperbarui', 'success', 'Modul Sumber Dikecualikan');
   };
 
   const deleteWhitelist = (id: string) => {
     setWhitelist((prev) => prev.filter((item) => item.id !== id));
     showToast(
-      'Sumber pengecualian berhasil dihapus. Domain ini akan kembali dihitung dalam skor kemiripan',
+      'Sumber dikecualikan berhasil dihapus. Domain ini akan kembali dihitung dalam skor kemiripan',
       'success',
-      'Modul Pengecualian Sumber'
+      'Modul Sumber Dikecualikan'
     );
   };
 
