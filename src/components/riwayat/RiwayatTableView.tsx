@@ -97,22 +97,46 @@ export const RiwayatTableView: React.FC<RiwayatTableViewProps> = ({
 
                   {/* Buku Gaya */}
                   <td className="py-4 px-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
-                      {item.styleGuideCount ?? 2} Temuan
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        item.styleGuideLevel === 'Tinggi' || (item.styleGuideCount ?? 0) > 3
+                          ? 'bg-red-50 text-red-700 border border-red-200'
+                          : item.styleGuideLevel === 'Sedang'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      }`}
+                    >
+                      {item.styleGuideScore || `${item.styleGuideCount ?? 2} Pelanggaran (Aman)`}
                     </span>
                   </td>
 
                   {/* Deteksi AI */}
                   <td className="py-4 px-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200">
-                      {item.aiDetectionCount ?? 1} Temuan
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        item.aiDetectionLevel === 'Tinggi'
+                          ? 'bg-red-50 text-red-700 border border-red-200'
+                          : item.aiDetectionLevel === 'Sedang'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      }`}
+                    >
+                      {item.aiDetectionScore || `${item.aiDetectionCount ? item.aiDetectionCount * 12 : 12}% (Aman)`}
                     </span>
                   </td>
 
                   {/* SEO & AI-Search */}
                   <td className="py-4 px-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
-                      {item.seoAiCount ?? 2} Temuan
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        item.seoAiLevel === 'Rendah'
+                          ? 'bg-red-50 text-red-700 border border-red-200'
+                          : item.seoAiLevel === 'Cukup'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      }`}
+                    >
+                      {item.seoAiScore || '88 Skor (Optimal)'}
                     </span>
                   </td>
 

@@ -11,8 +11,8 @@ export const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     paragraphCount: 3,
     aiDetection: '12% (Aman)',
     similarityScore: '18.4% (Rendah)',
-    styleGuideScore: 'Sesuai Kaidah',
-    seoAiScore: 'Optimal (9 Usulan)',
+    styleGuideScore: '0 Pelanggaran (Aman)',
+    seoAiScore: '88 Skor (Optimal)',
     changeSummary:
       'Parafrase kutipan sindikasi antaranews.com, koreksi nama lembaga BRIN sesuai Buku Gaya Bab 4, dan penyusunan heading H2.',
     title: 'Wahana orbit komunikasi nasional Satelit Nusantara Tiga berhasil mengorbit',
@@ -66,8 +66,8 @@ export const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     paragraphCount: 3,
     aiDetection: '22% (Aman)',
     similarityScore: '24.2% (Sedang)',
-    styleGuideScore: '1 Catatan Minor',
-    seoAiScore: 'Perlu Sub-heading',
+    styleGuideScore: '1 Pelanggaran (Aman)',
+    seoAiScore: '76 Skor (Optimal)',
     changeSummary:
       'Perbaikan ejaan pembuka dan penambahan keterangan lokasi pusat peluncuran Biak Numfor.',
     title: 'Peluncuran Satelit Nusantara Tiga Sukses Meluncur dari Stasiun Antariksa Biak',
@@ -118,8 +118,8 @@ export const DRAFT_VERSIONS_DATA: DraftVersionData[] = [
     paragraphCount: 3,
     aiDetection: '48% (Tinggi)',
     similarityScore: '32.8% (Tinggi)',
-    styleGuideScore: '3 Pelanggaran Format',
-    seoAiScore: 'Minim Konteks AI-Search',
+    styleGuideScore: '3 Pelanggaran (Aman)',
+    seoAiScore: '58 Skor (Rendah)',
     changeSummary:
       'Draft berita awal hasil sinkronisasi otomatis CMS RRI sebelum dilakukan uji kemiripan dan penyuntingan editor.',
     title: 'Peluncuran Satelit Nusantara Tiga Sukses Meluncur dari Stasiun Antariksa Biak',

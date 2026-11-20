@@ -76,8 +76,14 @@ export interface CheckHistoryItem {
   ignoredCount: number;
   editor?: string;
   styleGuideCount?: number;
+  styleGuideScore?: string;
+  styleGuideLevel?: 'Aman' | 'Sedang' | 'Tinggi';
   aiDetectionCount?: number;
+  aiDetectionScore?: string;
+  aiDetectionLevel?: 'Aman' | 'Sedang' | 'Tinggi';
   seoAiCount?: number;
+  seoAiScore?: string;
+  seoAiLevel?: 'Optimal' | 'Cukup' | 'Rendah';
   articleStatus?: ArticleStatus;
 }
 

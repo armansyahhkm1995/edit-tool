@@ -123,17 +123,57 @@ export const RiwayatVersionsView: React.FC<RiwayatVersionsViewProps> = ({
                           </span>
                         </div>
                       </td>
-                      <td className="py-4 px-4 whitespace-nowrap font-medium text-slate-700">
-                        {v.aiDetection}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            v.aiDetection.includes('Aman')
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : v.aiDetection.includes('Sedang') || v.aiDetection.includes('Perlu')
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                              : 'bg-red-50 text-red-700 border border-red-200'
+                          }`}
+                        >
+                          {v.aiDetection}
+                        </span>
                       </td>
-                      <td className="py-4 px-4 whitespace-nowrap font-medium text-slate-700">
-                        {v.similarityScore}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            v.similarityScore.includes('Rendah') || v.similarityScore.includes('Aman')
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : v.similarityScore.includes('Sedang')
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                              : 'bg-red-50 text-red-700 border border-red-200'
+                          }`}
+                        >
+                          {v.similarityScore}
+                        </span>
                       </td>
-                      <td className="py-4 px-4 whitespace-nowrap font-medium text-slate-700">
-                        {v.styleGuideScore}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            v.styleGuideScore.includes('Aman') || v.styleGuideScore.includes('Sesuai')
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : v.styleGuideScore.includes('Sedang')
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                              : 'bg-red-50 text-red-700 border border-red-200'
+                          }`}
+                        >
+                          {v.styleGuideScore}
+                        </span>
                       </td>
-                      <td className="py-4 px-4 whitespace-nowrap font-medium text-slate-700">
-                        {v.seoAiScore}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            v.seoAiScore.includes('Optimal') || v.seoAiScore.includes('Aman')
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : v.seoAiScore.includes('Cukup') || v.seoAiScore.includes('Perlu')
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                              : 'bg-red-50 text-red-700 border border-red-200'
+                          }`}
+                        >
+                          {v.seoAiScore}
+                        </span>
                       </td>
                       <td className="py-4 px-4 text-slate-600 max-w-xs">{v.changeSummary}</td>
                       <td className="py-4 px-4 text-center whitespace-nowrap">
