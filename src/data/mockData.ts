@@ -733,7 +733,7 @@ export const mockAIConfig: AIProviderConfig = {
   similarityThreshold: 20,
   styleGuideThreshold: 3,
   seoThreshold: 75,
-  aiSearchThreshold: 70,
+  aiSearchThreshold: 75,
   aiDetectionThreshold: 30,
 };
 

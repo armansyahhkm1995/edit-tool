@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
-import { Copy, BookOpen, Search, Sparkles, Bot, Sliders } from 'lucide-react';
+import { Copy, BookOpen, Search, Bot, Sliders } from 'lucide-react';
 
 export const KonfigurasiProviderPage: React.FC = () => {
   const { aiConfig, updateAIConfig } = useApp();
@@ -10,7 +10,6 @@ export const KonfigurasiProviderPage: React.FC = () => {
   const [similarityThreshold, setSimilarityThreshold] = useState(aiConfig.similarityThreshold ?? 20);
   const [styleGuideThreshold, setStyleGuideThreshold] = useState(aiConfig.styleGuideThreshold ?? 3);
   const [seoThreshold, setSeoThreshold] = useState(aiConfig.seoThreshold ?? 75);
-  const [aiSearchThreshold, setAiSearchThreshold] = useState(aiConfig.aiSearchThreshold ?? 70);
   const [aiDetectionThreshold, setAiDetectionThreshold] = useState(aiConfig.aiDetectionThreshold ?? 30);
 
   const handleSave = (e: React.FormEvent) => {
@@ -19,7 +18,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
       similarityThreshold,
       styleGuideThreshold,
       seoThreshold,
-      aiSearchThreshold,
+      aiSearchThreshold: seoThreshold,
       aiDetectionThreshold,
     });
     showToast('Konfigurasi ambang batas semua matriks berhasil disimpan', 'success');
@@ -29,7 +28,6 @@ export const KonfigurasiProviderPage: React.FC = () => {
     setSimilarityThreshold(aiConfig.similarityThreshold ?? 20);
     setStyleGuideThreshold(aiConfig.styleGuideThreshold ?? 3);
     setSeoThreshold(aiConfig.seoThreshold ?? 75);
-    setAiSearchThreshold(aiConfig.aiSearchThreshold ?? 70);
     setAiDetectionThreshold(aiConfig.aiDetectionThreshold ?? 30);
     showToast('Konfigurasi ambang batas dikembalikan ke pengaturan awal', 'info');
   };
@@ -72,15 +70,15 @@ export const KonfigurasiProviderPage: React.FC = () => {
       note: 'Standar: 3 kepatuhan',
     },
     {
-      id: 'seo',
-      name: '3. Search Engine Optimization (SEO)',
+      id: 'seo_ai_search',
+      name: '3. Optimasi SEO & AI-Search',
       badge: 'Min. Kelayakan',
       badgeClass: 'bg-purple-50 text-purple-700 border-purple-200',
       icon: Search,
       iconBg: 'bg-purple-50 text-purple-600 border-purple-200',
       description:
-        'Tentukan ambang batas skor minimal optimasi mesin pencari konvensional (struktur judul, kepadatan kata kunci, dan keterbacaan lead draft berita).',
-      label: 'Ambang Batas Skor Minimal SEO:',
+        'Tentukan ambang batas skor minimal kelayakan draft berita untuk optimasi mesin pencari web (Google Search) dan kesiapan kutipan mesin pencari AI (seperti Perplexity, SearchGPT, dan Google AI Overview).',
+      label: 'Ambang Batas Skor Minimal SEO & AI-Search:',
       value: seoThreshold,
       setValue: setSeoThreshold,
       unit: 'Skor',
@@ -90,26 +88,8 @@ export const KonfigurasiProviderPage: React.FC = () => {
       note: 'Standar: 75 / 100',
     },
     {
-      id: 'ai_search',
-      name: '4. AI-Search & Answer Engine Optimization',
-      badge: 'Min. Kesiapan',
-      badgeClass: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      icon: Sparkles,
-      iconBg: 'bg-indigo-50 text-indigo-600 border-indigo-200',
-      description:
-        'Tentukan ambang batas skor minimal kesiapan draft berita untuk dikutip dan diindeks oleh mesin pencari AI (seperti Perplexity, SearchGPT, dan Google AI Overview).',
-      label: 'Ambang Batas Optimasi AI-Search:',
-      value: aiSearchThreshold,
-      setValue: setAiSearchThreshold,
-      unit: 'Skor',
-      min: 1,
-      max: 100,
-      placeholder: '70',
-      note: 'Standar: 70 / 100',
-    },
-    {
       id: 'ai_detection',
-      name: '5. Deteksi Penulisan AI',
+      name: '4. Deteksi Penulisan AI',
       badge: 'Maks. Toleransi',
       badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
       icon: Bot,
@@ -135,7 +115,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
           Konfigurasi Ambang Batas Matriks
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
-          Kelola parameter ambang batas (threshold) analisis deteksi kemiripan draft berita, kepatuhan buku gaya, optimasi SEO, AI-Search, dan deteksi AI.
+          Kelola parameter ambang batas (threshold) analisis deteksi kemiripan draft berita, kepatuhan buku gaya, optimasi SEO & AI-Search, dan deteksi AI.
         </p>
       </div>
 
@@ -155,7 +135,7 @@ export const KonfigurasiProviderPage: React.FC = () => {
             </p>
           </div>
 
-          {/* List of 5 Metrics Thresholds */}
+          {/* List of 4 Metrics Thresholds */}
           <div className="space-y-3.5 pt-1">
             {metrics.map((metric) => {
               return (
